@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/09 20:29:34 by ebaudet           #+#    #+#              #
-#    Updated: 2019/12/09 20:41:50 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/12/09 20:51:08 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ ifneq ($(UNAME_S), Darwin)
 	FLAGS += -pthread
 endif
 SRC_PATH    = srcs
-INC_PATH    = include
+INC_PATH    = includes
 OBJ_PATH    = .obj
 SRC     =   main.cpp \
 			Lexer.cpp \
