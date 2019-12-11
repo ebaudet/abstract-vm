@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:18 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/10 17:04:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/11 19:02:58 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <string>
 
-enum eOperandType {Int8, Int16, Int32, Float, Double};
+enum eOperandType { Int8, Int16, Int32, Float, Double };
 
 class IOperand {
 

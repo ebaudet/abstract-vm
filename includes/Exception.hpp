@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 22:07:53 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/10 22:13:44 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/11 17:52:48 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,11 @@ class Exception {
 
         // __RuntimeException_______________
 
-        class NullOperand : public RuntimeException {
+        class Overflow : public RuntimeException {
+            public:
+                virtual const char* what() const throw();
+        };
+        class Underflow : public RuntimeException {
             public:
                 virtual const char* what() const throw();
         };
