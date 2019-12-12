@@ -22,25 +22,30 @@ int main( int ac, char**av ) {
     Factory F = Factory();
 
     const IOperand *A = F.createOperand(eOperandType::Int16, "175");
-    const IOperand *B = F.createOperand(eOperandType::Int32, "32");
+    const IOperand *B = F.createOperand(eOperandType::Int32, "0");
 
     const IOperand *C = *A + *B;
 
     std::cout << "A: " << A->toString() << ", " << A->getType() << ", " << A->getPrecision() << std::endl;
     std::cout << "B: " << B->toString() << ", " << B->getType() << ", " << B->getPrecision() << std::endl;
-    std::cout << "C: " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
+    std::cout << "C: A + B = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
     delete C;
     C = *A - *B;
-    std::cout << "C: " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
+    std::cout << "C: A - B = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
     delete C;
-    C = *A / *B;
-    std::cout << "C: " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
-    delete C;
+    try{
+        C = *A / *B;
+        std::cout << "C: A / B = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
+     delete C;
+    }
+    catch(std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
     C = *A % *B;
-    std::cout << "C: " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
+    std::cout << "C: A % B = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
     delete C;
     C = *A * *B;
-    std::cout << "C: " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
+    std::cout << "C: A x B = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
 
 
 
