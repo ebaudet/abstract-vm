@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 22:07:53 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/11 17:52:48 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/12 15:46:05 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,38 @@
 #define EXCEPTION_HPP
 
 #include <exception>
+#include <stdexcept>
 
 class Exception {
-    public:
-        class RuntimeException: public std::exception {};
+	public:
+		class ConceptionException: public std::exception {};
+		class RuntimeException: public std::exception {};
 
-        // __RuntimeException_______________
+		// __ConceptionException____________
 
-        class Overflow : public RuntimeException {
-            public:
-                virtual const char* what() const throw();
-        };
-        class Underflow : public RuntimeException {
-            public:
-                virtual const char* what() const throw();
-        };
-    private:
-        Exception();
-        ~Exception();
+		class Factory : public ConceptionException {
+			public:
+				virtual const char* what() const throw();
+		};
+		class Operand : public ConceptionException {
+			public:
+				virtual const char* what() const throw();
+		};
+
+		// __RuntimeException_______________
+
+		class Overflow : public RuntimeException {
+			public:
+				virtual const char* what() const throw();
+		};
+		class Underflow : public RuntimeException {
+			public:
+				virtual const char* what() const throw();
+		};
+
+	private:
+		Exception();
+		~Exception();
 };
 
 #endif // EXCEPTION_HPP

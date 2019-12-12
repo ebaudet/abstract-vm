@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 19:57:26 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/11 19:31:24 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/12 17:07:55 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <stdexcept>
 
 enum eOperationType { Multiplication, Division, Addition, Substration, Modulo };
 
@@ -99,6 +100,19 @@ public:
 		return _value;
 	}
 
+	class DivideByZeroException : public std::runtime_error {
+		public:
+			DivideByZeroException() : std::runtime_error( "Divide by zero exception." ) {}
+	};
+	class OverflowException : public std::overflow_error {
+		public:
+			OverflowException() : std::overflow_error( "Overflow on a value" ) {}
+	};
+	class UnderflowException : public std::overflow_error {
+		public:
+			UnderflowException() : std::overflow_error( "Underflow on a value" ) {}
+	};
+
 private:
 
 	/***********************************************
@@ -122,23 +136,28 @@ private:
 		switch ( operation ) {
 			case eOperationType::Multiplication:
 			result = lval * rval;
-		case eOperationType::Division:
-			result = lval / rval;
-			break;
-		case eOperationType::Addition:
-			result = lval + rval;
-			break;
-		case eOperationType::Substration:
-			result = lval - rval;
-			break;
-		case eOperationType::Modulo:
-			result = std::fmod( lval, rval );
-			break;
+			case eOperationType::Division:
+				if (rval == 0)
+					throw Operand::DivideByZeroException();
+				result = lval / rval;
+				break;
+			case eOperationType::Addition:
+				result = lval + rval;
+				break;
+			case eOperationType::Substration:
+				result = lval - rval;
+				break;
+			case eOperationType::Modulo:
+				result = std::fmod( lval, rval );
+				break;
+			default:
+				throw Exception::Operand();
+				break;
 		}
 		if (result > std::numeric_limits<double>::max())
-			throw Exception::Overflow();
+			throw Operand::OverflowException();
 		if (result < std::numeric_limits<double>::min())
-			throw Exception::Underflow();
+			throw Operand::UnderflowException();
 
 		int precision = std::max( rhs.getPrecision(), this->getPrecision() );
 		eOperandType type = static_cast<eOperandType>( precision );

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:25:01 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/11 19:25:09 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/12 20:29:47 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,29 @@ Factory &Factory::operator=( Factory const &rhs ) {
 }
 
 IOperand const * Factory::createOperand( eOperandType type, std::string const & value ) const {
-	// (void *)func;
-	(void)type;
-	IOperand const *(Factory::*func)( std::string const & value ) const = &Factory::createInt8;
+	IOperand const *(Factory::*func)( std::string const & value ) const = NULL;
+
+	switch ( type ) {
+		case eOperandType::Int8:
+			func = &Factory::createInt8;
+			break;
+		case eOperandType::Int16:
+			func = &Factory::createInt16;
+			break;
+		case eOperandType::Int32:
+			func = &Factory::createInt32;
+			break;
+		case eOperandType::Float:
+			func = &Factory::createFloat;
+			break;
+		case eOperandType::Double:
+			func = &Factory::createDouble;
+			break;
+		default:
+			throw Exception::Factory();
+			break;
+	}
+
 	return (this->*func)( value );
 }
 
