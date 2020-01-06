@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 19:57:26 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/12 17:07:55 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/06 18:55:50 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,8 @@ private:
 		double result = 0;
 		switch ( operation ) {
 			case eOperationType::Multiplication:
-			result = lval * rval;
+				result = lval * rval;
+				break;
 			case eOperationType::Division:
 				if (rval == 0)
 					throw Operand::DivideByZeroException();
@@ -148,6 +149,8 @@ private:
 				result = lval - rval;
 				break;
 			case eOperationType::Modulo:
+				if (rval == 0)
+					throw Operand::DivideByZeroException();
 				result = std::fmod( lval, rval );
 				break;
 			default:
@@ -156,7 +159,7 @@ private:
 		}
 		if (result > std::numeric_limits<double>::max())
 			throw Operand::OverflowException();
-		if (result < std::numeric_limits<double>::min())
+		if (result < std::numeric_limits<double>::lowest())
 			throw Operand::UnderflowException();
 
 		int precision = std::max( rhs.getPrecision(), this->getPrecision() );
