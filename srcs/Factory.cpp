@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:25:01 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/06 18:54:30 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/08 15:46:18 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,6 @@ std::string Factory::_convertType( std::string const & value ) const {
 		throw Exception::Underflow();
 
 	std::ostringstream strs;
-	strs << static_cast<T>( vald );
+	strs << +static_cast<T>( vald );
 	return strs.str();
 }

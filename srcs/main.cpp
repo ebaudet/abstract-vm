@@ -6,44 +6,35 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:20:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 11:34:10 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/08 18:16:20 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Factory.hpp"
+#include "Instruction.hpp"
 #include "Operand.hpp"
 #include "IOperand.hpp"
 #include <iostream>
-#include <stack>
-#include "Instruction.hpp"
-// #include <stdexcept>
 
-// class StackException : public std::runtime_error {
-// 	public:
-// 		StackException() : std::runtime_error( "Stack exception" ) {}
-// 		StackException(const char* what_arg) : std::runtime_error( what_arg ) {}
-// };
+void print_error(std::string error) {
+	std::cerr << "\x1B[31m" << error << "\x1B[0m" << std::endl;
+}
 
-// void     add(std::stack<const IOperand *> *stack) {
-// 	if (stack->size() < 2)
-// 		throw StackException( "Add: Stack is lower 2." );
-// 	const IOperand *A = stack->top();
-// 	stack->pop();
-// 	const IOperand *B = stack->top();
-// 	stack->pop();
-// 	const IOperand *C;
-// 	C = *A + *B;
-// 	stack->push(C);
-// }
+int test();
 
 int main( int ac, char**av ) {
 	(void)ac;
 	(void)av;
 
-	Factory F = Factory();
+	test();
+	return 0;
+}
 
-	const IOperand *A = F.createOperand(eOperandType::Int16, "15");
-	const IOperand *B = F.createOperand(eOperandType::Float, "0");
+int test() {
+	Factory factory = Factory();
+
+	const IOperand *A = factory.createOperand(eOperandType::Int8, "15");
+	const IOperand *B = factory.createOperand(eOperandType::Float, "0");
 
 	const IOperand *C;
 
@@ -55,35 +46,35 @@ int main( int ac, char**av ) {
 		std::cout << "C: A + B = "  << A->toString() << " + " << B->toString() << " = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
 		delete C;
 	} catch (std::exception &e) {
-		std::cerr << "C: A + B = "  << A->toString() << " + " << B->toString() << " = " << e.what() << std::endl;
+		print_error("C: A + B = " + A->toString() + " + " + B->toString() + " = " + e.what());
 	}
 	try {
 		C = *A - *B;
 		std::cout << "C: A - B = "  << A->toString() << " - " << B->toString() << " = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
 		delete C;
 	} catch (std::exception &e) {
-		std::cerr << "C: A - B = "  << A->toString() << " - " << B->toString() << " = " << e.what() << std::endl;
+		print_error("C: A - B = " + A->toString() + " - " + B->toString() + " = " + e.what());
 	}
 	try {
 		C = *A / *B;
 		std::cout << "C: A / B = " << A->toString() << " / " << B->toString() << " = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
 		delete C;
 	} catch(std::exception &e) {
-		std::cerr << "C: A / B = " << A->toString() << " / " << B->toString() << " = " << e.what() << std::endl;
+		print_error("C: A / B = " + A->toString() + " / " + B->toString() + " = " + e.what());
 	}
 	try {
 		C = *A % *B;
 		std::cout << "C: A % B = " << A->toString() << " % " << B->toString() << " = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
 		delete C;
 	} catch (std::exception &e) {
-		std::cerr << "C: A % B = " << A->toString() << " % " << B->toString() << " = " << e.what() << std::endl;
+		print_error("C: A % B = " + A->toString() + " % " + B->toString() + " = " + e.what());
 	}
 	try {
 		C = *A * *B;
 		std::cout << "C: A x B = " << A->toString() << " x " << B->toString() << " = " << C->toString() << ", " << C->getType() << ", " << C->getPrecision() << std::endl;
 		delete C;
 	} catch (std::exception &e) {
-		std::cerr << "C: A x B = " << A->toString() << " x " << B->toString() << " = " << e.what() << std::endl;
+		print_error("C: A x B = " + A->toString() + " x " + B->toString() + " = " + e.what());
 	}
 
 	delete A;
@@ -91,77 +82,131 @@ int main( int ac, char**av ) {
 
 
 	// sample.avm
-	Instruction *I = new Instruction();
-	// std::stack<const IOperand *> *stack = new std::stack<const IOperand *>();
+	Instruction *instruction = new Instruction();
+	instruction->debug = true;
 
-	// push int32(2)
-	I->push(F.createOperand(eOperandType::Int32, "2"));
-	// add
+	/**
+	 * Test 1
+	 */
+	std::cout << ">>>>> TEST 1" << std::endl;
 	try {
-		I->add();
+		// push int32(2)
+		instruction->push(factory.createOperand(eOperandType::Int32, "2"));
+		// push int32(3)
+		instruction->push(factory.createOperand(eOperandType::Int32, "3"));
+		// add
+		instruction->add();
+		// assert int32(5)
+		instruction->assert_val(factory.createOperand(eOperandType::Int32, "5"));
+		// dump
+		instruction->dump();
+
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
 	}
-	// push int32(33)
-	I->push(F.createOperand(eOperandType::Int32, "33"));
+	// exit
+	instruction->exit();
+
+	/**
+	 * Test 2
+	 */
+	std::cout << ">>>>> TEST 2" << std::endl;
+	// pop
+	try {
+		instruction->pop();
+	} catch (std::exception &e) {
+		print_error(e.what());
+	}
+	instruction->exit();
+
+	/**
+	 * Test 3
+	 */
+	std::cout << ">>>>> TEST 3" << std::endl;
+	// push int32(2)
+	instruction->push(factory.createOperand(eOperandType::Int32, "42"));
+
 	// add
 	try {
-		I->add();
+		instruction->add();
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
+	}
+
+	// push int32(33)
+	instruction->push(factory.createOperand(eOperandType::Int32, "33"));
+
+	// add
+	try {
+		instruction->add();
+	} catch (std::exception &e) {
+		print_error(e.what());
 	}
 
 	// push float(44.55)
 	try {
-		I->push(F.createOperand(eOperandType::Float, "44.55"));
+		instruction->push(factory.createOperand(eOperandType::Float, "44.55"));
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
 	}
 
 	// mul
 	try {
-		I->mul();
+		instruction->mul();
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
 	}
 
 	// push double(42.42)
 	try {
-		I->push(F.createOperand(eOperandType::Double, "42.42"));
+		instruction->push(factory.createOperand(eOperandType::Double, "42.42"));
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
 	}
 
 	// push int32(42)
 	try {
-		I->push(F.createOperand(eOperandType::Int32, "42"));
+		instruction->push(factory.createOperand(eOperandType::Int32, "42"));
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
 	}
 
 	// dump
 	try {
-		I->dump();
+		instruction->dump();
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
 	}
 
 	// pop
 	try {
-		I->pop();
+		instruction->pop();
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
 	}
 
 	// assert double(42.42)
 	try {
-		I->assert_val(F.createOperand(eOperandType::Double, "42.42"));
+		instruction->assert_val(factory.createOperand(eOperandType::Double, "42.42"));
 	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
+		print_error(e.what());
 	}
 
 
-	// exit
+	try {
+		instruction->push(factory.createOperand(eOperandType::Int8, "42"));
+	} catch (std::exception &e) {
+		print_error(e.what());
+	}
 
-	return 0;
+	instruction->print();
+
+	// exit
+	instruction->exit();
+	try {
+		instruction->test_exit();
+	} catch (std::exception &e) {
+		print_error(e.what());
+	}
+	return (0);
 }

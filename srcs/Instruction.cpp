@@ -6,15 +6,17 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 11:55:15 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/08 18:01:00 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Instruction.hpp"
+#include <iostream>
 
 Instruction::Instruction() {
 	deque = new std::deque<const IOperand *>();
-	// F = Factory();
+	debug = false;
+	instruction_exited = false;
 }
 
 Instruction::Instruction( Instruction const &src ) {
@@ -35,6 +37,7 @@ Instruction::StackException::StackException() : std::runtime_error( "Stack excep
 Instruction::StackException::StackException(const char* what_arg) : std::runtime_error( what_arg ) {}
 
 Instruction::AssertException::AssertException() : std::runtime_error( "Assert exception" ) {}
+Instruction::ExitException::ExitException() : std::runtime_error( "Exit instruction is missing." ) {}
 
 /**
  * Pushes the value v at the top of the stack. The value v must have one of
@@ -67,7 +70,12 @@ void Instruction::pop() {
  * by a newline.
  */
 void Instruction::dump() {
-	// TODO
+	std::deque<const IOperand *>::iterator it;
+	if (debug)
+		std::cout << "\x1B[34mdump >\x1B[0m" << std::endl;
+	for (it = deque->begin(); it != deque->end(); ++it) {
+		std::cout << (*it)->toString() << std::endl;
+	}
 }
 
 /**
@@ -191,6 +199,27 @@ void Instruction::mod() {
  * corresponding character on the standard output.
  */
 void Instruction::print() {
-	// TODO
+	const IOperand *to_print = deque->front();
+	if (to_print->getType() != eOperandType::Int8)
+		throw Instruction::AssertException();
+	if (debug)
+		std::cout << "\x1B[34mprint >\x1B[0m" << std::endl;
+	std::cout << static_cast<char>( std::stod( to_print->toString() ) ) << std::endl;
 }
 
+/**
+ * Terminate the execution of the current program. If this instruction does not
+ * appears while all others instruction has been processed, the execution must stop
+ * with an error.
+ */
+void Instruction::exit() {
+	while (deque->size() > 0) {
+		pop();
+	}
+	instruction_exited = true;
+}
+
+void Instruction::test_exit() {
+	if (!instruction_exited)
+		throw Instruction::ExitException();
+}

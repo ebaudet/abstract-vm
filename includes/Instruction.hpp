@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:46:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 11:02:13 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/08 18:00:34 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ public:
 	void mod();
 	void print();
 	void exit();
+	void test_exit();
 
 	class StackException : public std::runtime_error {
 	public:
@@ -45,11 +46,16 @@ public:
 	class AssertException : public std::runtime_error {
 	public:
 		AssertException();
-		// AssertException(const char* what_arg);
+	};
+	class ExitException : public std::runtime_error {
+	public:
+		ExitException();
 	};
 
 
-	std::deque<const IOperand *> *deque;
+	std::deque<const IOperand *>	*deque;
+	bool							debug;
+	bool							instruction_exited;
 protected:
 	// Factory F;
 };
