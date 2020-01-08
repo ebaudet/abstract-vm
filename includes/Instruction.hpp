@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:46:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/07 18:18:29 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/08 11:02:13 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define INSTRUCTION_HPP
 
 #include "IOperand.hpp"
+#include "Factory.hpp"
 #include <deque>
 
 class Instruction {
@@ -47,8 +48,10 @@ public:
 		// AssertException(const char* what_arg);
 	};
 
-// protected:
+
 	std::deque<const IOperand *> *deque;
+protected:
+	// Factory F;
 };
 
 #endif // INSTRUCTION_HPP

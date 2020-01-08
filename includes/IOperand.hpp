@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:18 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/11 19:02:58 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/08 11:44:49 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ public:
 	virtual std::string const & toString( void ) const = 0; // String representation of the instance
 
 	virtual ~IOperand( void ) {}
+
+	virtual bool	operator==( IOperand const & rhs ) const = 0; // ==
+	virtual bool	operator!=( IOperand const & rhs ) const = 0; // !=
 
 };
 

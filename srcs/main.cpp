@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:20:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/07 18:15:43 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/08 11:34:10 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,58 @@ int main( int ac, char**av ) {
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
+
+	// push float(44.55)
+	try {
+		I->push(F.createOperand(eOperandType::Float, "44.55"));
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+	// mul
+	try {
+		I->mul();
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+	// push double(42.42)
+	try {
+		I->push(F.createOperand(eOperandType::Double, "42.42"));
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+	// push int32(42)
+	try {
+		I->push(F.createOperand(eOperandType::Int32, "42"));
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+	// dump
+	try {
+		I->dump();
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+	// pop
+	try {
+		I->pop();
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+	// assert double(42.42)
+	try {
+		I->assert_val(F.createOperand(eOperandType::Double, "42.42"));
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+
+	// exit
 
 	return 0;
 }

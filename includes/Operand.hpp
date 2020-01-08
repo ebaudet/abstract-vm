@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 19:57:26 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/06 18:55:50 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/08 10:14:01 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,18 @@ public:
 	// Modulo
 	IOperand const *	operator%( IOperand const & rhs ) const {
 		return _operation( rhs, eOperationType::Modulo );
+	}
+
+	bool	operator==( IOperand const & rhs ) const {
+		double rval = std::stod( rhs.toString() );
+		double lval = std::stod( _value );
+		return (rval == lval);
+	}
+
+	bool	operator!=( IOperand const & rhs ) const {
+		double rval = std::stod( rhs.toString() );
+		double lval = std::stod( _value );
+		return (rval != lval);
 	}
 
 	/***********************************************

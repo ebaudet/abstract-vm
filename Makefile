@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/09 20:29:34 by ebaudet           #+#    #+#              #
-#    Updated: 2020/01/07 18:17:38 by ebaudet          ###   ########.fr        #
+#    Updated: 2020/01/08 11:55:32 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,16 +50,18 @@ BOLD = "\e[1m"
 LIGHT = "\e[2m"
 ITALIC = "\e[3m"
 ULINE = "\e[4m"
+DEBUGFLG	= -fsanitize=address -g3
+DEBUGFLG	=
 
 all: $(NAME)
 
 $(NAME): $(OBJ_PATH) $(OBJP)
 	@printf $(CYAN)"-> create program : $(NAME)\n"$(NORMAL)
-	@$(CPP) $(FLAGS) -o $(NAME) $(OBJP)
+	@$(CPP) $(FLAGS) -o $(NAME) $(OBJP) $(DEBUGFLG)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp $(HEADP)
 	@printf $(YELLOW)"-> $<\n"$(NORMAL)
-	@$(CPP) $(FLAGS) -c $< -o $@ $(INCP)
+	@$(CPP) $(FLAGS) -c $< -o $@ $(INCP) $(DEBUGFLG)
 
 $(OBJ_PATH):
 	@mkdir -p $(dir $(OBJP))
