@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:27:25 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 19:29:37 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/09 21:22:34 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,25 @@ Z := [-]?[0..9]+.[0..9]+
 SEP := '\n'+
 */
 
+#include "Instruction.hpp"
+#include <iostream>
+#include <vector>
+
 class Lexer {
-    public:
-        Lexer();
-        Lexer(Lexer const &src);
-        virtual ~Lexer();
+	public:
+		Lexer();
+		Lexer(Lexer const &src);
+		virtual ~Lexer();
 
-        Lexer &operator=(Lexer const &rhs);
+		Lexer &operator=(Lexer const &rhs);
 
-    private:
+		void	readFromFile(char *file, Instruction &instruction);
+		void	readFromStdin(Instruction &instruction);
+		void	parseLine(std::string line, int line_row);
+
+	private:
+		static std::vector<std::string> _instructionsName;
+		static std::vector<std::string> _typesName;
 };
 
 #endif // LEXER_HPP

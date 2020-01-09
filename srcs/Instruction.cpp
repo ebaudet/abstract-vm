@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 18:01:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/09 18:25:28 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 
 Instruction::Instruction() {
 	deque = new std::deque<const IOperand *>();
-	debug = false;
 	instruction_exited = false;
+	verbose = false;
+	continue_error = false;
 }
 
 Instruction::Instruction( Instruction const &src ) {
@@ -30,6 +31,8 @@ Instruction &Instruction::operator=( Instruction const &rhs ) {
 }
 
 Instruction::~Instruction() {
+	while (deque->size() > 0)
+		pop();
 	delete deque;
 }
 
@@ -71,7 +74,7 @@ void Instruction::pop() {
  */
 void Instruction::dump() {
 	std::deque<const IOperand *>::iterator it;
-	if (debug)
+	if (verbose)
 		std::cout << "\x1B[34mdump >\x1B[0m" << std::endl;
 	for (it = deque->begin(); it != deque->end(); ++it) {
 		std::cout << (*it)->toString() << std::endl;
@@ -202,7 +205,7 @@ void Instruction::print() {
 	const IOperand *to_print = deque->front();
 	if (to_print->getType() != eOperandType::Int8)
 		throw Instruction::AssertException();
-	if (debug)
+	if (verbose)
 		std::cout << "\x1B[34mprint >\x1B[0m" << std::endl;
 	std::cout << static_cast<char>( std::stod( to_print->toString() ) ) << std::endl;
 }
@@ -222,4 +225,13 @@ void Instruction::exit() {
 void Instruction::test_exit() {
 	if (!instruction_exited)
 		throw Instruction::ExitException();
+}
+
+/*
+ * Clear instructions list.
+ */
+void Instruction::clear() {
+	while (deque->size() > 0)
+		pop();
+	instruction_exited = false;
 }

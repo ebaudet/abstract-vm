@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:46:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 18:00:34 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/09 18:04:38 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,29 @@
 class Instruction {
 
 public:
+	std::deque<const IOperand *>	*deque;
+	bool							verbose;
+	bool							continue_error;
+	bool							instruction_exited;
+
 	Instruction();
 	Instruction( Instruction const &src );
 	Instruction &operator=( Instruction const &rhs );
 	~Instruction();
 
-	void push(const IOperand *value);
-	void pop();
-	void dump();
-	void assert_val(const IOperand *value);
-	void add();
-	void sub();
-	void mul();
-	void div();
-	void mod();
-	void print();
-	void exit();
-	void test_exit();
+	void	push(const IOperand *value);
+	void	pop();
+	void	dump();
+	void	assert_val(const IOperand *value);
+	void	add();
+	void	sub();
+	void	mul();
+	void	div();
+	void	mod();
+	void	print();
+	void	exit();
+	void	test_exit();
+	void	clear();
 
 	class StackException : public std::runtime_error {
 	public:
@@ -52,12 +58,6 @@ public:
 		ExitException();
 	};
 
-
-	std::deque<const IOperand *>	*deque;
-	bool							debug;
-	bool							instruction_exited;
-protected:
-	// Factory F;
 };
 
 #endif // INSTRUCTION_HPP

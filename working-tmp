@@ -1,0 +1,90 @@
+
+
+LEXER:
+
+push int32(42); comment
+std::vector<Tokens> row = {
+    {type: instruction, value: "push", pos: 1},
+    {type: type, value: "int32", pos: 6},
+    {type: open_par, value: "(", pos: 11},
+    {type: n_value, value: "42", pos: 12},
+    {type: close_par, value: ")", pos: 14},
+    {type: comment, value: "; comment", pos: 15}
+}
+{"push": {instruction}, "int32": {type}, "(": {open_par}, "42": {n_value}, ")": {close_par}}
+
+     assert double(  42.42 )
+{"assert": {instruction}, "double": {type}, "(": {open_par}, "42.42": {z_value}, ")": {close_par}}
+std::vector<Tokens> row = {
+    {type: instruction, value: "assert", pos: 6},
+    {type: type, value: "double", pos: 13},
+    {type: open_par, value: "(", pos: 19},
+    {type: z_value, value: "42.42", pos: 22},
+    {type: close_par, value: ")", pos: 28}
+}
+
+
+wet double(12a) ; assert double(  42.42 )
+{"wet": {unknown}, "double": {type}, "(": {open_par}, "12a": {unknown}, ")": {close_par}}
+std::vector<Tokens> row = {
+    {type: unknown, value: "wet", pos: 1},
+    {type: type, value: "double", pos: 4},
+    {type: open_par, value: "(", pos: 11},
+    {type: unknown, value: "42a", pos: 12},
+    {type: close_par, value: ")", pos: 15},
+    {type: comment, value: "; assert double(  42.42 )", pos: 17}
+}
+
+each element are named Tokens
+
+N : std::regex isInt("-?[[:digit:]]+");
+Z : std::regex isFloat("[-]?[:digit:]+.[:digit:]+")
+SPACE : std::regex isSpace("[^\\S\\r\\n]*")
+COMMENT : std::regex isComment(";(.)*")
+END_FILE: std::regex isEnd("(;;)");
+
+PARSER:
+
+instruction
+-> without value
+expect nothing more
+
+-> with value
+type
+open_par
+n_value | z_value
+close_par
+
+
+
+S := INSTR [SEP INSTR]* #
+
+INSTR :=
+	push VALUE
+	| pop
+	| dump
+	| assert VALUE
+	| add
+	| sub
+	| mul
+	| div
+	| mod
+	| print
+	| exit
+
+VALUE :=
+	int8(N)
+	| int16(N)
+	| int32(N)
+	| float(Z)
+	| double(Z)
+
+N := [-]?[0..9]+
+
+Z := [-]?[0..9]+.[0..9]+
+
+SEP := '\n'+
+
+
+
+
