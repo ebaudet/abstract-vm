@@ -6,11 +6,18 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:36:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/09 21:22:30 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/10 12:54:09 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Lexer.hpp"
+
+std::vector<std::string> Lexer::instructionStr = {
+	"push" ,"pop", "dump", "assert", "add", "sub", "mul", "div", "mod", "print", "exit"
+};
+std::vector<std::string> Lexer::operandTypeStr = {
+	"int8", "int16", "int32", "float", "double"
+};
 
 Lexer::Lexer() {
 }

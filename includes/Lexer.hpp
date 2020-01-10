@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:27:25 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/09 21:22:34 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/10 12:54:00 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,18 @@ SEP := '\n'+
 */
 
 #include "Instruction.hpp"
+#include "IOperand.hpp"
+#include "Tolken.hpp"
 #include <iostream>
 #include <vector>
 
+
+
 class Lexer {
 	public:
+		static std::vector<std::string> instructionStr;
+		static std::vector<std::string> operandTypeStr;
+
 		Lexer();
 		Lexer(Lexer const &src);
 		virtual ~Lexer();
