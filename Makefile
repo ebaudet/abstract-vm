@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/09 20:29:34 by ebaudet           #+#    #+#              #
-#    Updated: 2020/01/10 10:52:12 by ebaudet          ###   ########.fr        #
+#    Updated: 2020/01/10 15:26:02 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ SRC		=	main.cpp \
 			Factory.cpp \
 			Exception.cpp \
 			Instruction.cpp \
-			Tolken.cpp
+			Token.cpp
 HEAD	=	Lexer.hpp \
 			Parser.hpp \
 			IOperand.hpp \
@@ -35,7 +35,7 @@ HEAD	=	Lexer.hpp \
 			Exception.hpp \
 			Operand.hpp \
 			Instruction.hpp \
-			Tolken.hpp
+			Token.hpp
 OBJ		= $(SRC:.cpp=.o)
 HEADP	= $(addprefix $(INC_PATH)/, $(HEAD))
 OBJP	= $(addprefix $(OBJ_PATH)/, $(OBJ))

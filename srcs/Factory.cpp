@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:25:01 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 15:46:18 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/10 15:39:23 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "Operand.hpp"
 #include "Exception.hpp"
 #include <sstream>
+
+// -- Constructors -------------------------------------------------------------
 
 Factory::Factory() {
 }
@@ -25,11 +27,15 @@ Factory::Factory( Factory const &src ) {
 Factory::~Factory() {
 }
 
+// -- Operators ----------------------------------------------------------------
+
 Factory &Factory::operator=( Factory const &rhs ) {
 	if ( this != &rhs )
 		;
 	return *this;
 }
+
+// -- Public methods -----------------------------------------------------------
 
 IOperand const * Factory::createOperand( eOperandType type, std::string const & value ) const {
 	IOperand const *(Factory::*func)( std::string const & value ) const = NULL;
@@ -58,9 +64,7 @@ IOperand const * Factory::createOperand( eOperandType type, std::string const & 
 	return (this->*func)( value );
 }
 
-/***********************************************
-	private functions
-************************************************/
+// -- Private methods ----------------------------------------------------------
 
 IOperand const * Factory::createInt8( std::string const & value ) const {
 	std::string convertValue = this->_convertType<int8_t>( value );

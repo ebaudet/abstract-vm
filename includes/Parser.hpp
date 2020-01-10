@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:15 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 12:55:10 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/10 19:48:15 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 #define PARSER_HPP
 
 #include <vector>
+#include <sstream>
 
-enum eInstruction { push, pop, dump, assert, add, sub, mul, div, mod, print, exit };
+enum eInstruction { InstrPush, InstrPop, InstrDump, InstrAssert, InstrAdd,
+InstrSub, InstrMul, InstrDiv, InstrMod, InstrPrint, InstrExit };
 
 class Parser {
 	public:

@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Tolken.hpp                                         :+:      :+:    :+:   */
+/*   Token.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/10 10:24:54 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 12:39:03 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/10 19:12:59 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <vector>
 
-enum eTokenType { Unknown, InstructionNoArg, InstructionArg, Type, OpenPar, ClosePar, NValue, ZValue };
+enum eTokenType { Unknown, InstructionNoArg, InstructionArg, Type, OpenPar, ClosePar, NValue, ZValue, Space };
 
-class Tolken
+class Token
 {
 	private:
 		eTokenType _type;
@@ -24,11 +24,11 @@ class Tolken
 
 	public:
 		static std::vector<std::string> token_name;
-
-		Tolken( eTokenType type, std::string value, size_t pos );
-		Tolken( Tolken const &src );
-		~Tolken();
-		Tolken &operator=( Tolken const &rhs );
+		Token();
+		Token( eTokenType type, std::string value, size_t pos );
+		Token( Token const &src );
+		~Token();
+		Token &operator=( Token const &rhs );
 
 		// Accessors
 		eTokenType GetType() const;
@@ -38,7 +38,7 @@ class Tolken
 		void SetPos( size_t pos );
 		void SetValue( std::string value );
 
-		friend std::ostream& operator<<(std::ostream& os, const Tolken& tolken);
+		friend std::ostream& operator<<(std::ostream& os, const Token& tolken);
 };
 
-std::ostream &	operator<<( std::ostream &os, Tolken const &tolken );
+std::ostream &	operator<<( std::ostream &os, Token const &tolken );

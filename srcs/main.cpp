@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:20:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/09 20:37:55 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/10 15:47:32 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 #include <iostream>
 #include <unistd.h>
 
-#define TEST(x) try { x } catch (std::exception &e) { print_error(e.what()); if (!instruction.continue_error) return (EXIT_FAILURE); }
+#define TEST(x) try { x } catch (std::exception &e) { print_error(e.what()); \
+if (!instruction.continue_error) return (EXIT_FAILURE); }
 
 void	print_error(std::string error) {
 	std::cerr << "\x1B[31m" << error << "\x1B[0m" << std::endl;
@@ -118,8 +119,10 @@ int		test_factory()
 
 	const IOperand *C;
 
-	std::cout << "A: " << A->toString() << ", " << A->getType() << ", " << A->getPrecision() << std::endl;
-	std::cout << "B: " << B->toString() << ", " << B->getType() << ", " << B->getPrecision() << std::endl;
+	std::cout << "A: " << A->toString() << ", " << A->getType() << ", "
+	<< A->getPrecision() << std::endl;
+	std::cout << "B: " << B->toString() << ", " << B->getType() << ", "
+	<< B->getPrecision() << std::endl;
 
 	try {
 		C = *A + *B;

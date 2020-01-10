@@ -6,12 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/09 18:25:28 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/10 19:37:00 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Instruction.hpp"
 #include <iostream>
+
+// -- Constructors -------------------------------------------------------------
 
 Instruction::Instruction() {
 	deque = new std::deque<const IOperand *>();
@@ -24,23 +26,35 @@ Instruction::Instruction( Instruction const &src ) {
 	*this = src;
 }
 
-Instruction &Instruction::operator=( Instruction const &rhs ) {
-	if ( this != &rhs )
-		deque = new std::deque<const IOperand *>(*rhs.deque);
-	return *this;
-}
-
 Instruction::~Instruction() {
 	while (deque->size() > 0)
 		pop();
 	delete deque;
 }
 
-Instruction::StackException::StackException() : std::runtime_error( "Stack exception" ) {}
-Instruction::StackException::StackException(const char* what_arg) : std::runtime_error( what_arg ) {}
+// -- Operators ----------------------------------------------------------------
 
-Instruction::AssertException::AssertException() : std::runtime_error( "Assert exception" ) {}
-Instruction::ExitException::ExitException() : std::runtime_error( "Exit instruction is missing." ) {}
+Instruction &Instruction::operator=( Instruction const &rhs ) {
+	if ( this != &rhs )
+		deque = new std::deque<const IOperand *>(*rhs.deque);
+	return *this;
+}
+
+// -- Exceptions errors --------------------------------------------------------
+
+Instruction::StackException::StackException()
+: std::runtime_error( "Stack exception" ) {}
+
+Instruction::StackException::StackException(const char* what_arg)
+: std::runtime_error( what_arg ) {}
+
+Instruction::AssertException::AssertException()
+: std::runtime_error( "Assert exception" ) {}
+
+Instruction::ExitException::ExitException()
+: std::runtime_error( "Exit instruction is missing." ) {}
+
+// -- Public methods -----------------------------------------------------------
 
 /**
  * Pushes the value v at the top of the stack. The value v must have one of

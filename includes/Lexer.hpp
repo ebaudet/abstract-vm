@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:27:25 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 12:54:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/10 19:42:00 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ SEP := '\n'+
 
 #include "Instruction.hpp"
 #include "IOperand.hpp"
-#include "Tolken.hpp"
+#include "Token.hpp"
 #include <iostream>
 #include <vector>
-
+#include <regex>
 
 
 class Lexer {
@@ -67,6 +67,14 @@ class Lexer {
 		void	readFromFile(char *file, Instruction &instruction);
 		void	readFromStdin(Instruction &instruction);
 		void	parseLine(std::string line, int line_row);
+		bool	createToken(std::string line, int line_row, int i);
+
+		// todo : check inherit
+		class LexerException : public std::runtime_error {
+		public:
+			LexerException();
+			LexerException( const char* what_arg );
+		};
 
 	private:
 		static std::vector<std::string> _instructionsName;
