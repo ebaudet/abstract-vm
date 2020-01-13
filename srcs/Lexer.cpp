@@ -6,11 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:36:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 19:49:33 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/13 11:59:49 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Lexer.hpp"
+#include <iostream>
+#include <regex>
+#include <sstream>
 
 void	p_error(std::string error) {
 	std::cerr << "\x1B[31m" << error << "\x1B[0m" << std::endl;
@@ -132,6 +135,7 @@ void Lexer::parseLine(std::string line, int line_row) {
 	std::regex r(regexStr);
 	std::smatch m;
 
+	std::vector<Token> listToken;
 	size_t pos = 0;
 	std::string::const_iterator it = line.cbegin();
 	while ((it != line.cend()) && std::regex_search(it, line.cend(), m, r) == true) {
@@ -141,22 +145,30 @@ void Lexer::parseLine(std::string line, int line_row) {
 		int found = 0;
 		for (unsigned long group_nb = 1; group_nb < m.size(); group_nb++) {
 			if (!m[group_nb].str().empty()) {
-				std::cout << "found: " << token_type[group_nb - 1] << " '"<< m.str(0) << "' pos: " << pos << std::endl;
+				std::cout << "found: " << Token::token_name[group_nb] << " '"<< m.str(0) << "' pos: " << pos << std::endl;
+				Token newToken = Token(static_cast<eTokenType>(group_nb), m.str(0), pos);
+				std::cout << newToken << std::endl;
+				listToken.push_back(newToken);
+				// todo : create new token.
 				it += m.length();
 				pos += m.length();
 				found++;
-				// todo : create new token.
 				// todo : add it to the list of tokens
 			}
 		}
 		if (!found) {
-			// std::ostringstream sstr;
-			// sstr << "coucou";
-			// sstr << "Lexeror:" << line_row << ":" << pos << " error:" << &line[it - line.cbegin()];
-			throw Lexer::LexerException();
+			std::ostringstream sstr;
+			sstr << "Lexeror:" << line_row << ":" << pos << " error:" << &line[it - line.cbegin()];
+			throw Lexer::LexerException(sstr.str().c_str());
 			break;
 		}
 	}
+	std::cout << "listVector {" << std::endl;
+	for (auto &&i : listToken) {
+		std::cout << "\t" << i << "," << std::endl;
+	}
+	std::cout << "}" << std::endl;
+
 }
 
 // -- Private members initialisation -------------------------------------------

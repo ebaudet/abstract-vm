@@ -6,14 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/10 10:24:54 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 19:12:59 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/13 11:50:14 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <vector>
 
-enum eTokenType { Unknown, InstructionNoArg, InstructionArg, Type, OpenPar, ClosePar, NValue, ZValue, Space };
+enum eTokenType { Unknown, Comment, OpenPar, ClosePar, InstructionName, Type, ZVal, NVal, Space };
 
 class Token
 {

@@ -6,14 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/10 10:22:38 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 19:12:44 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/13 11:50:14 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Token.hpp"
 
 std::vector<std::string> Token::token_name = {
-	"Unknown", "InstructionNoArg", "InstructionArg", "Type", "OpenPar", "ClosePar", "NValue", "ZValue", "Space"
+	"Unknown", "Comment","OpenPar", "ClosePar", "InstructionName", "Type", "ZVal", "NVal", "Space"
 };
 
 Token::Token() {

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:27:25 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 19:42:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/13 11:37:14 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ SEP := '\n'+
 #include "Instruction.hpp"
 #include "IOperand.hpp"
 #include "Token.hpp"
-#include <iostream>
 #include <vector>
-#include <regex>
-
 
 class Lexer {
 	public:
