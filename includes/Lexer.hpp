@@ -6,12 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:27:25 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/13 11:37:14 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/13 20:32:24 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#if !defined(LEXER_HPP)
-#define LEXER_HPP
+#ifndef LEXER_HPP_
+#define LEXER_HPP_
+
 /*
 **
 BNF (Backus–Naur form) grammar :
@@ -49,11 +50,20 @@ SEP := '\n'+
 #include "IOperand.hpp"
 #include "Token.hpp"
 #include <vector>
+#include <map>
+
+enum eInstruction { PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT };
 
 class Lexer {
 	public:
-		static std::vector<std::string> instructionStr;
-		static std::vector<std::string> operandTypeStr;
+		static std::map<std::string, int>			instrArg;
+		static std::map<std::string, eTokenType>	typeArg;
+
+		// static std::vector<std::string> instructionStr;
+		// static std::vector<int> instructionArg;
+		// static std::vector<std::string> operandTypeStr;
+
+		std::vector<Token> listToken;
 
 		Lexer();
 		Lexer(Lexer const &src);
@@ -61,10 +71,10 @@ class Lexer {
 
 		Lexer &operator=(Lexer const &rhs);
 
-		void	readFromFile(char *file, Instruction &instruction);
-		void	readFromStdin(Instruction &instruction);
-		void	parseLine(std::string line, int line_row);
-		bool	createToken(std::string line, int line_row, int i);
+		void		readFromFile(char *file, Instruction &instruction);
+		void		readFromStdin(Instruction &instruction);
+		void		lexLine(std::string line, int line_row);
+		std::string	parsingRegex();
 
 		// todo : check inherit
 		class LexerException : public std::runtime_error {
@@ -72,10 +82,16 @@ class Lexer {
 			LexerException();
 			LexerException( const char* what_arg );
 		};
-
-	private:
-		static std::vector<std::string> _instructionsName;
-		static std::vector<std::string> _typesName;
 };
 
-#endif // LEXER_HPP
+template <class T>
+std::ostream &	operator<<(std::ostream &os, std::vector<T> const &vector_list)
+{
+	os << "{" << std::endl;
+	for (auto &&i : vector_list)
+		os << "\t" << i << "," << std::endl;
+	os << "}" << std::endl;
+	return (os);
+};
+
+#endif  // LEXER_HPP_
