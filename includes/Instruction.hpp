@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:46:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/09 18:04:38 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 17:30:19 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@
 #include "IOperand.hpp"
 #include "Factory.hpp"
 #include <deque>
+
+// struct InstructionArg
+// {
+// 	int nbArg;
+// 	(void )
+// };
+
 
 class Instruction {
 
@@ -41,6 +48,7 @@ public:
 	void	mod();
 	void	print();
 	void	exit();
+
 	void	test_exit();
 	void	clear();
 

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:27:25 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/13 20:32:24 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 16:34:43 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,26 @@ SEP := '\n'+
 #include <vector>
 #include <map>
 
-enum eInstruction { PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT };
-
 class Lexer {
 	public:
+		// public Members
 		static std::map<std::string, int>			instrArg;
 		static std::map<std::string, eTokenType>	typeArg;
+		std::vector<Token>							listToken;
 
-		// static std::vector<std::string> instructionStr;
-		// static std::vector<int> instructionArg;
-		// static std::vector<std::string> operandTypeStr;
-
-		std::vector<Token> listToken;
-
+		// Constructors
 		Lexer();
 		Lexer(Lexer const &src);
 		virtual ~Lexer();
 
+		// Operators
 		Lexer &operator=(Lexer const &rhs);
 
-		void		readFromFile(char *file, Instruction &instruction);
-		void		readFromStdin(Instruction &instruction);
-		void		lexLine(std::string line, int line_row);
+		// Methods
+		void		readFromFile( char *file, Instruction &instruction );
+		void		readFromStdin( Instruction &instruction );
+		int			readLine( std::string line, int line_row, Instruction&instruction );
+		void		lexLine( std::string line, int line_row );
 		std::string	parsingRegex();
 
 		// todo : check inherit
@@ -85,7 +83,7 @@ class Lexer {
 };
 
 template <class T>
-std::ostream &	operator<<(std::ostream &os, std::vector<T> const &vector_list)
+std::ostream &	operator<<( std::ostream &os, std::vector<T> const &vector_list )
 {
 	os << "{" << std::endl;
 	for (auto &&i : vector_list)

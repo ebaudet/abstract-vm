@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:20:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 15:47:32 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 17:22:59 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@
 #include "Parser.hpp"
 #include <iostream>
 #include <unistd.h>
+#include "Color.hpp"
 
 #define TEST(x) try { x } catch (std::exception &e) { print_error(e.what()); \
 if (!instruction.continue_error) return (EXIT_FAILURE); }
 
 void	print_error(std::string error) {
-	std::cerr << "\x1B[31m" << error << "\x1B[0m" << std::endl;
+	std::cerr << RED << error << EOC << std::endl;
 }
 
 int		test(Instruction &instruction);
@@ -40,7 +41,7 @@ int		usage(char *file) {
 int		main( int ac, char**av ) {
 	int opt;
 	Lexer lexer = Lexer();
-	Parser parser = Parser();
+	// Parser parser = Parser();
 	Instruction instruction = Instruction();
 
 	while ((opt = getopt(ac, av, "vhe")) != EOF) {
@@ -57,11 +58,11 @@ int		main( int ac, char**av ) {
 	}
 
 	if (ac - optind == 1) {
-		std::cout << "read from file <" << av[optind] << ">" << std::endl;
+		// std::cout << "read from file <" << av[optind] << ">" << std::endl;
 		lexer.readFromFile(av[optind], instruction);
 	}
 	else if (ac - optind == 0) {
-		std::cout << "read from stdin" << std::endl;
+		// std::cout << "read from stdin" << std::endl;
 		lexer.readFromStdin(instruction);
 	}
 	else

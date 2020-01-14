@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:36:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/13 21:19:26 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 17:30:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 #include <regex>
 #include <sstream>
 #include <fstream>
+#include "Color.hpp"
 
 void	p_error(std::string error) {
-	std::cerr << "\x1B[31m" << error << "\x1B[0m" << std::endl;
+	std::cerr << error << std::endl;
 }
 
 // -- Public members -----------------------------------------------------------
@@ -45,19 +46,6 @@ std::map<std::string, eTokenType>	Lexer::typeArg = {
 	{"double", eTokenType::ZVal}
 };
 
-// std::vector<std::string> Lexer::instructionStr = {
-// 	"push" ,"pop", "dump", "assert", "add", "sub", "mul", "div", "mod", "print",
-// 	"exit"
-// };
-
-// std::vector<int> Lexer::instructionArg {
-// 	1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0
-// };
-
-// std::vector<std::string> Lexer::operandTypeStr = {
-// 	"int8", "int16", "int32", "float", "double"
-// };
-
 // -- Constructors -------------------------------------------------------------
 
 Lexer::Lexer() {
@@ -81,41 +69,56 @@ Lexer &Lexer::operator=(Lexer const &rhs) {
 
 // -- Exceptions errors --------------------------------------------------------
 
-Lexer::LexerException::LexerException(const char* what_arg)
-: std::runtime_error( what_arg ) {}
+Lexer::LexerException::LexerException( const char* what_arg )
+: std::runtime_error( std::string(
+	 what_arg
+	).c_str() ) {}
 
 Lexer::LexerException::LexerException()
-: std::runtime_error( "Lexer Exception" ) {}
+: std::runtime_error( RED "Lexer Exception" EOC ) {}
 
 // -- Methods ------------------------------------------------------------------
 
-void Lexer::readFromFile(char *file, Instruction &instruction) {
-	(void)instruction;
-	(void)file;
-	// TODO;
+void	Lexer::readFromFile(char *file, Instruction &instruction) {
+	std::ifstream infile(file);
+	std::string line;
+
+	for (int line_row = 1; std::getline(infile, line); line_row++) {
+		if (readLine(line, line_row, instruction) == EXIT_FAILURE)
+			return ;
+	}
 }
 
-void Lexer::readFromStdin(Instruction &instruction) {
-	Parser parser;
+void	Lexer::readFromStdin(Instruction &instruction) {
 	std::string line;
 
 	std::cout << "> ";
 	for (int line_row = 1; std::getline(std::cin, line); line_row++) {
-		try {
-			listToken.erase( listToken.begin(), listToken.end() );
-			lexLine(line, line_row);
-			std::cout << "listVector " << listToken << std::endl;
-
-			parser.parseToken(listToken);
-
-		} catch (std::exception &e) {
-			std::cout << "\x1B[34m" << "$ " << line << "\x1B[0m" << std::endl;
-			p_error(e.what());
-			if (!instruction.continue_error)
-				return ;
-		}
+		if (readLine(line, line_row, instruction) == EXIT_FAILURE)
+			return ;
 		std::cout << "> ";
 	}
+}
+
+int		Lexer::readLine(std::string line, int line_row, Instruction &instruction) {
+	Parser parser = Parser(line);
+	Parser parser2 = parser;
+
+	try {
+		if (line == ";;")
+			return EXIT_SUCCESS;
+		listToken.erase( listToken.begin(), listToken.end() );
+		lexLine(line, line_row);
+		// std::cout << "listVector " << listToken << std::endl;
+
+		parser.parseToken(listToken);
+
+	} catch (std::runtime_error &e) {
+		p_error(e.what());
+		if (!instruction.continue_error)
+			return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -173,9 +176,9 @@ void Lexer::lexLine(std::string line, int line_row) {
 		}
 		if (!found) {
 			std::ostringstream sstr;
-			sstr << std::string(pos + 2, ' ') << "^" << std::endl;
-			sstr << "LexerError:" << line_row << ":" << pos << " error:"
-				<< &line[it - line.cbegin()];
+			sstr << RED "LexerError:" << line_row << ":" << pos
+			<< EOC " error: \"" << &line[it - line.cbegin()] << "\"\n" << line
+			<< "\n" << std::string(pos, ' ') << GREEN "^" EOC;
 			throw Lexer::LexerException(sstr.str().c_str());
 		}
 	}

@@ -6,27 +6,29 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:22 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/13 21:27:55 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 16:50:35 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parser.hpp"
 #include <iostream>
 #include "Lexer.hpp"
-
-// -- Public members -----------------------------------------------------------
-
-
+#include "Color.hpp"
 
 // -- Constructors -------------------------------------------------------------
 
-Parser::Parser() {
+Parser::Parser( std::string line ) : _line( line ) {
 	_openBracket = true;
 	_typeNumber = eTokenType::Unknown;
+	_val = "";
 	_nbParams = 0;
+	_pos = 0;
+	_lineRow = 0;
+	_tokenList = NULL;
 }
 
 Parser::Parser(Parser const &src) {
+	_tokenList = src._tokenList;
 	*this = src;
 }
 
@@ -36,93 +38,160 @@ Parser::~Parser() {
 // -- Operators ----------------------------------------------------------------
 
 Parser &Parser::operator=(Parser const &rhs) {
-	if (this != &rhs)
-		;
+	if (this != &rhs) {
+		_openBracket = rhs._openBracket;
+		_typeNumber = rhs._typeNumber;
+		_nbParams = rhs._nbParams;
+		_pos = rhs._pos;
+		_lineRow = rhs._lineRow;
+		_tokenList = rhs._tokenList;
+		_line = rhs._line;
+	}
 	return *this;
+}
+
+std::ostream &	operator<<( std::ostream & os, const Parser &parser ) {
+	os << "{type:" << Token::token_name[parser.GetTypeNumber()]
+	<< ", nbParams: \"" << parser.GetNbParams() << "\", pos: "
+	<< parser.GetPos() << "\", line: " << parser.GetLineRow() << "}";
+	return (os);
+}
+
+// -- Accessors ----------------------------------------------------------------
+
+eTokenType Parser::GetTypeNumber() const {
+	return _typeNumber;
+}
+int Parser::GetNbParams() const {
+	return _nbParams;
+}
+size_t Parser::GetPos() const {
+	return _pos;
+}
+size_t Parser::GetLineRow() const {
+	return _lineRow;
 }
 
 // -- Methods ------------------------------------------------------------------
 
-void Parser::parseType(std::vector<Token> tokenList, std::vector<Token>::iterator &it)
+void Parser::parseType(std::vector<Token>::iterator &it)
 {
-	if (it == tokenList.end() || it->GetType() != eTokenType::Type)
-		throw ParserException("Type expected.", *it);
-	++it;
+	if ( it == _tokenList->end() )
+		throw ParserException("Type expected.", *this);
+
+	if ( it->GetType() != eTokenType::Type )
+		throw ParserException("Type expected.", *it, _line);
+
+	std::map<std::string, eTokenType>::iterator it_typeArg;
+	it_typeArg = Lexer::typeArg.find(it->GetValue());
+	_typeNumber = it_typeArg->second;
+
+	iteratorInc(it);
 }
 
-void Parser::parseNumber(std::vector<Token> tokenList, std::vector<Token>::iterator &it)
+void Parser::parseNumber(std::vector<Token>::iterator &it)
 {
-	if (it == tokenList.end())
-		throw ParserException("Number expected.", *it);
+	parseSpace(it);
+
+	if (it == _tokenList->end())
+		throw ParserException("Number expected.", *this);
+
+	if (it->GetType() != _typeNumber) {
+		std::ostringstream sstr;
+		sstr << "Type " << Token::token_name[_typeNumber] << " expected.";
+		throw ParserException(sstr.str().c_str(), *it, _line);
+	}
+
+	_val = it->GetValue();
+
+	iteratorInc(it);
 }
 
-void Parser::parseBracket(std::vector<Token> tokenList, std::vector<Token>::iterator &it)
+void Parser::parseBracket(std::vector<Token>::iterator &it)
 {
-	parseSpace(tokenList, it, false);
+	parseSpace(it);
+	if (it == _tokenList->end())
+		throw ParserException("Bracket expected.", *this);
 
 	if (_openBracket) {
 		if (it->GetType() != eTokenType::OpenPar)
-			throw ParserException("Open Bracket expected.", *it);
+			throw ParserException("Open Bracket expected.", *it, _line);
 	} else {
 		if (it->GetType() != eTokenType::ClosePar)
-			throw ParserException("Close Bracket expected.", *it);
+			throw ParserException("Close Bracket expected.", *it, _line);
 	}
+
 	_openBracket = !_openBracket;
+
+	iteratorInc(it);
 }
 
-void Parser::parseValue(std::vector<Token> tokenList, std::vector<Token>::iterator &it)
+void Parser::parseValue(std::vector<Token>::iterator &it)
 {
-	parseSpace(tokenList, it, true);
-	parseType(tokenList, it);
-
-	parseBracket(tokenList, it);
-	parseNumber(tokenList, it);
-	parseBracket(tokenList, it);
+	if (it == _tokenList->end())
+		throw ParserException("Value expected.", *this);
 
 	if (it->GetType() == eTokenType::Comment)
-		throw ParserException("Arguments expected.", *it);
+		throw ParserException("Arguments expected.", *it, _line);
+
+	parseSpace(it, true);
+	parseType(it);
+	parseBracket(it);
+	parseNumber(it);
+	parseBracket(it);
 }
 
-void Parser::parseSpace(std::vector<Token> tokenList, std::vector<Token>::iterator &it, bool expected)
+void Parser::parseInstruction(std::vector<Token>::iterator &it)
 {
-	if (it == tokenList.end()) {
+	if (it == _tokenList->end())
+		return ;
+	if (it->GetType() != eTokenType::InstructionName)
+		throw ParserException("Instruction expected.", *it, _line);
+
+	std::map<std::string, int>::iterator it_inst;
+	it_inst = Lexer::instrArg.find(it->GetValue());
+	_nbParams = it_inst->second;
+
+	iteratorInc(it);
+}
+
+void Parser::parseSpace(std::vector<Token>::iterator &it, bool expected)
+{
+	if (it == _tokenList->end()) {
 		if (expected)
-			throw ParserException("Space expected.", *it);
+			throw ParserException("Space expected.", *this);
 		return ;
 	}
 
 	if (it->GetType() == eTokenType::Space) {
-		++it;
+		iteratorInc(it);
 	}
 	else if (expected)
-		throw ParserException("Space expected.", *it);
+		throw ParserException("Space expected.", *it, _line);
 }
 
-void Parser::parseToken(std::vector<Token> tokenList) {
-	int params = 0;
+void Parser::parseToken(std::vector<Token> &tokenList) {
+	_tokenList = &tokenList;
 	std::vector<Token>::iterator it = tokenList.begin();
 
-	parseSpace(tokenList, it, false);
+	// std::cout << "Test: " << tokenList << std::endl;
+	// std::cout << "Parser : " << *this << std::endl;
+	// std::cout << "<parseToken>" << std::endl;
 
+	parseSpace(it);
 	if (it->GetType() == eTokenType::Comment)
-		return;
-	if (it->GetType() != eTokenType::InstructionName) {
-		throw ParserException("Instruction expected.", *it);
-	} else {
-		std::map<std::string, int>::iterator it_inst;
-		it_inst = Lexer::instrArg.find(it->GetValue());
-		params = it_inst->second;
-		++it;
-		if (params > 0) {
-			parseValue(tokenList, it);
-		}
-		parseSpace(tokenList, it, false);
-		if (it->GetType() == eTokenType::Comment) {
-			++it;
-		}
+		return ;
+	parseInstruction(it);
+	if (_nbParams > 0) {
+		parseValue(it);
 	}
+	parseSpace(it);
+	if (it->GetType() == eTokenType::Comment) {
+		iteratorInc(it);
+	}
+
 	if (it != tokenList.end())
-		throw ParserException("No more argument exected.", *it);
+		throw ParserException("No argument exected.", *it, _line);
 
 	// if works, all good params have to be save in the private members in order
 	// to launch them.
@@ -130,6 +199,31 @@ void Parser::parseToken(std::vector<Token> tokenList) {
 	// - function (fonction's pointer of Instruction's class)
 	// - value type (eOperandType)
 	// - value value (string)
+}
+
+int		Parser::iteratorInc( std::vector<Token>::iterator &it, bool expected )
+{
+	if (it == _tokenList->end())
+		throw ParserException("Unexpected end.", *this);
+
+	_pos += it->GetLength();
+	++it;
+	if (it == _tokenList->end()) {
+		if (expected)
+			throw ParserException("Unexpected end.", *this);
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+const std::string Parser::getMessageError( const char *what_arg ) {
+	std::ostringstream sstr;
+
+	sstr << RED "ParserError:" << _lineRow << ":"
+	<< _pos << EOC " " << what_arg << "\n" << _line << "\n"
+	<< std::string(_pos, ' ') << GREEN "^" EOC;
+
+	return sstr.str().c_str();
 }
 
 // -- Exceptions errors --------------------------------------------------------
@@ -143,10 +237,16 @@ Parser::ParserException::ParserException( const char* what_arg )
 // >  int32
 //    ^
 // ParserError:2:1: Instruction expected.
-Parser::ParserException::ParserException( const char* what_arg, Token token )
+Parser::ParserException::ParserException( const char* what_arg, Token &token, std::string line )
 : std::runtime_error( std::string(
-		std::string(token.GetPos() + 2, ' ')
-		+ "^\nParserError:" + std::to_string(token.GetLine()) + ":"
-		+ std::to_string(token.GetPos())+ " " + what_arg
-		+ token.toString()
+		RED "ParserError:" + std::to_string(token.GetLine()) + ":"
+		+ std::to_string(token.GetPos())+ EOC " " + what_arg + "\n" + line + "\n"
+		+ std::string(token.GetPos(), ' ') + GREEN "^" EOC
 	).c_str() ) {}
+
+// >  int32
+//    ^
+// ParserError:2:1: Instruction expected.
+Parser::ParserException::ParserException( const char* what_arg, Parser &parser )
+: std::runtime_error( parser.getMessageError( what_arg ) ) {}
+

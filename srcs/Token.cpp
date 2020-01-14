@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/10 10:22:38 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/13 21:01:08 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 15:38:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ Token::~Token() {
 
 Token &Token::operator=( Token const &rhs ) {
 	if (this != &rhs) {
-		_type = rhs.GetType();
-		_value = rhs.GetValue();
-		_pos = rhs.GetPos();
-		_line = rhs.GetLine();
+		_type = rhs._type;
+		_value = rhs._value;
+		_pos = rhs._pos;
+		_line = rhs._line;
 	}
 	return *this;
 }
