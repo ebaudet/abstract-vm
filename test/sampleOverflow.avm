@@ -1,0 +1,3 @@
+push int8(42) ; comment
+push int32(9999999999999999999999) ; test overflow
+exit

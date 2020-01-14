@@ -6,12 +6,29 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/10 19:37:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 20:07:06 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Instruction.hpp"
 #include <iostream>
+#include "Color.hpp"
+
+// -- Public members -----------------------------------------------------------
+
+std::map<std::string, Instruction::InstructionArg>	Instruction::instrArgs = {
+	{"push", {1, &Instruction::push}},
+	{"pop", {0, &Instruction::pop}},
+	{"dump", {0, &Instruction::dump}},
+	{"assert", {1, &Instruction::assert_val}},
+	{"add", {0, &Instruction::add}},
+	{"sub", {0, &Instruction::sub}},
+	{"mul", {0, &Instruction::mul}},
+	{"div", {0, &Instruction::div}},
+	{"mod", {0, &Instruction::mod}},
+	{"print", {0, &Instruction::print}},
+	{"exit", {0, &Instruction::exit}}
+};
 
 // -- Constructors -------------------------------------------------------------
 
@@ -73,7 +90,8 @@ void Instruction::push(const IOperand *value) {
  * Unstacks the value from the top of the stack. If the stack is empty, the
  * program execution must stop with an error.
  */
-void Instruction::pop() {
+void Instruction::pop(const IOperand *value) {
+	(void)value;
 	if (deque->size() == 0)
 		throw Instruction::StackException( "Pop: Stack is empty." );
 	const IOperand *A = deque->front();
@@ -86,10 +104,11 @@ void Instruction::pop() {
  * one WITHOUT CHANGING the stack. Each value is separated from the next one
  * by a newline.
  */
-void Instruction::dump() {
+void Instruction::dump(const IOperand *value) {
+	(void)value;
 	std::deque<const IOperand *>::iterator it;
 	if (verbose)
-		std::cout << "\x1B[34mdump >\x1B[0m" << std::endl;
+		std::cout << BLUE "dump >" EOC << std::endl;
 	for (it = deque->begin(); it != deque->end(); ++it) {
 		std::cout << (*it)->toString() << std::endl;
 	}
@@ -115,7 +134,8 @@ void Instruction::assert_val(const IOperand *value) {
  * result. If the number of values on the stack is strictly inferior to 2, the program
  * execution must stop with an error.
  */
-void Instruction::add() {
+void Instruction::add(const IOperand *value) {
+	(void)value;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "Add: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -134,7 +154,8 @@ void Instruction::add() {
  * result. If the number of values on the stack is strictly inferior to 2, the program
  * execution must stop with an error.
  */
-void Instruction::sub() {
+void Instruction::sub(const IOperand *value) {
+	(void)value;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "Add: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -153,7 +174,8 @@ void Instruction::sub() {
  * result. If the number of values on the stack is strictly inferior to 2, the program
  * execution must stop with an error.
  */
-void Instruction::mul() {
+void Instruction::mul(const IOperand *value) {
+	(void)value;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "Add: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -175,7 +197,8 @@ void Instruction::mul() {
  * point. If you don’t understand why, some will understand. The linked question is
  * an open one, there’s no definitive answer.
  */
-void Instruction::div() {
+void Instruction::div(const IOperand *value) {
+	(void)value;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "Add: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -196,7 +219,8 @@ void Instruction::div() {
  * the program execution must stop with an error too. Same note as above about fp
  * values.
  */
-void Instruction::mod() {
+void Instruction::mod(const IOperand *value) {
+	(void)value;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "Add: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -215,12 +239,13 @@ void Instruction::mod() {
  * see the instruction assert), then interprets it as an ASCII value and displays the
  * corresponding character on the standard output.
  */
-void Instruction::print() {
+void Instruction::print(const IOperand *value) {
+	(void)value;
 	const IOperand *to_print = deque->front();
 	if (to_print->getType() != eOperandType::Int8)
 		throw Instruction::AssertException();
 	if (verbose)
-		std::cout << "\x1B[34mprint >\x1B[0m" << std::endl;
+		std::cout << BLUE "print >" EOC << std::endl;
 	std::cout << static_cast<char>( std::stod( to_print->toString() ) ) << std::endl;
 }
 
@@ -229,7 +254,8 @@ void Instruction::print() {
  * appears while all others instruction has been processed, the execution must stop
  * with an error.
  */
-void Instruction::exit() {
+void Instruction::exit(const IOperand *value) {
+	(void)value;
 	while (deque->size() > 0) {
 		pop();
 	}

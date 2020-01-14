@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:36:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/14 17:30:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 18:50:57 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <iostream>
 #include <regex>
 #include <sstream>
-#include <fstream>
+
 #include "Color.hpp"
 
 void	p_error(std::string error) {
@@ -38,12 +38,12 @@ std::map<std::string, int>	Lexer::instrArg = {
 	{"exit", 0}
 };
 
-std::map<std::string, eTokenType>	Lexer::typeArg = {
-	{"int8", eTokenType::NVal},
-	{"int16", eTokenType::NVal},
-	{"int32", eTokenType::NVal},
-	{"float", eTokenType::ZVal},
-	{"double", eTokenType::ZVal}
+std::map<std::string, Lexer::TypeArg>	Lexer::typeArg = {
+	{"int8", {eTokenType::NVal, eOperandType::Int8}},
+	{"int16", {eTokenType::NVal, eOperandType::Int16}},
+	{"int32", {eTokenType::NVal, eOperandType::Int32}},
+	{"float", {eTokenType::ZVal, eOperandType::Float}},
+	{"double", {eTokenType::ZVal, eOperandType::Double}}
 };
 
 // -- Constructors -------------------------------------------------------------
@@ -79,48 +79,6 @@ Lexer::LexerException::LexerException()
 
 // -- Methods ------------------------------------------------------------------
 
-void	Lexer::readFromFile(char *file, Instruction &instruction) {
-	std::ifstream infile(file);
-	std::string line;
-
-	for (int line_row = 1; std::getline(infile, line); line_row++) {
-		if (readLine(line, line_row, instruction) == EXIT_FAILURE)
-			return ;
-	}
-}
-
-void	Lexer::readFromStdin(Instruction &instruction) {
-	std::string line;
-
-	std::cout << "> ";
-	for (int line_row = 1; std::getline(std::cin, line); line_row++) {
-		if (readLine(line, line_row, instruction) == EXIT_FAILURE)
-			return ;
-		std::cout << "> ";
-	}
-}
-
-int		Lexer::readLine(std::string line, int line_row, Instruction &instruction) {
-	Parser parser = Parser(line);
-	Parser parser2 = parser;
-
-	try {
-		if (line == ";;")
-			return EXIT_SUCCESS;
-		listToken.erase( listToken.begin(), listToken.end() );
-		lexLine(line, line_row);
-		// std::cout << "listVector " << listToken << std::endl;
-
-		parser.parseToken(listToken);
-
-	} catch (std::runtime_error &e) {
-		p_error(e.what());
-		if (!instruction.continue_error)
-			return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
 /**
  * Create the parsing Regex in the same order that eTokenType (in Token.hpp).
  */
@@ -129,7 +87,7 @@ std::string Lexer::parsingRegex() {
 	std::string open_par = "(\\()";
 	std::string close_par = "(\\))";
 	std::string instruction = "(";
-	for (auto &&s : Lexer::instrArg)
+	for (auto &&s : Instruction::instrArgs)
 		instruction += s.first + "|";
 
 	if (instruction.back() == '|') instruction.pop_back();
@@ -160,6 +118,8 @@ void Lexer::lexLine(std::string line, int line_row) {
 	std::string::const_iterator it = line.cbegin();
 	size_t pos = 0;
 	int found;
+
+	listToken.erase( listToken.begin(), listToken.end() );
 
 	while ((it != line.cend())
 		&& std::regex_search(it, line.cend(), m, r) == true) {

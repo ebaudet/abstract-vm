@@ -1,0 +1,79 @@
+; test abs
+push int32(42)
+abs
+push int32(-2)
+abs
+dump
+
+; test min/max
+min
+max
+
+; test pow
+pow
+dump
+pop
+
+; print "-\n\n"
+push int8(95)
+print
+pop
+push int8(10)
+print
+pop
+push int8(10)
+print
+pop
+
+; test not
+push int32(42)
+not
+dump
+pop
+
+; test and
+push int8(2) ; 0010
+push int8(3) ; 0011
+and
+dump
+; expect 2 (0010)
+pop
+
+; test or
+push int8(2) ; 0010
+push int8(3) ; 0011
+or
+dump
+; expect 3 (0011)
+pop
+
+; test xor
+push int8(2) ; 0010
+push int8(3) ; 0011
+xor
+dump
+; expect 1 (0001)
+pop
+
+; print "-\n\n"
+push int8(95)
+print
+pop
+push int8(10)
+print
+pop
+push int8(10)
+print
+pop
+
+; test clear
+push int8(42)
+push int8(3)
+push int8(-50)
+push int8(90)
+push int8(12)
+dump
+clear
+dump
+
+exit

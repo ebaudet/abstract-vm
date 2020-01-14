@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:27:25 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/14 16:34:43 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/14 19:12:28 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,15 @@ SEP := '\n'+
 
 class Lexer {
 	public:
+		struct TypeArg
+		{
+			eTokenType		tokenType;
+			eOperandType	operandType;
+		};
 		// public Members
-		static std::map<std::string, int>			instrArg;
-		static std::map<std::string, eTokenType>	typeArg;
-		std::vector<Token>							listToken;
+		static std::map<std::string, int>		instrArg;
+		static std::map<std::string, TypeArg>	typeArg;
+		std::vector<Token>						listToken;
 
 		// Constructors
 		Lexer();
@@ -68,9 +73,9 @@ class Lexer {
 		Lexer &operator=(Lexer const &rhs);
 
 		// Methods
-		void		readFromFile( char *file, Instruction &instruction );
-		void		readFromStdin( Instruction &instruction );
-		int			readLine( std::string line, int line_row, Instruction&instruction );
+		// void		readFromFile( char *file, Instruction &instruction );
+		// void		readFromStdin( Instruction &instruction );
+		// int			readLine( std::string line, int line_row, Instruction&instruction );
 		void		lexLine( std::string line, int line_row );
 		std::string	parsingRegex();
 
