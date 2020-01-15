@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/09 20:29:34 by ebaudet           #+#    #+#              #
-#    Updated: 2020/01/14 19:15:54 by ebaudet          ###   ########.fr        #
+#    Updated: 2020/01/15 23:23:16 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ ifneq ($(UNAME_S), Darwin)
 endif
 SRC_PATH	= srcs
 INC_PATH	= includes
+LIB_PATH	= lib
 OBJ_PATH	= .obj
 SRC		=	main.cpp \
 			Lexer.cpp \
@@ -27,8 +28,10 @@ SRC		=	main.cpp \
 			Factory.cpp \
 			Exception.cpp \
 			Instruction.cpp \
-			Token.cpp
-HEAD	=	Lexer.hpp \
+			Token.cpp \
+			argparse.cpp
+HEAD	=	main.hpp \
+			Lexer.hpp \
 			Parser.hpp \
 			IOperand.hpp \
 			Factory.hpp \
@@ -36,11 +39,14 @@ HEAD	=	Lexer.hpp \
 			Operand.hpp \
 			Instruction.hpp \
 			Token.hpp \
-			Color.hpp
+			Color.hpp \
+			argparse.hpp
+LIB		=
 OBJ		= $(SRC:.cpp=.o)
 HEADP	= $(addprefix $(INC_PATH)/, $(HEAD))
 OBJP	= $(addprefix $(OBJ_PATH)/, $(OBJ))
-INCP	= $(foreach dir, $(INC_PATH), -I $(dir))
+LIBP	= $(addprefix $(LIB_PATH)/, $(LIB))
+INCP	= $(foreach dir, $(INC_PATH) $(LIB_PATH), -I $(dir))
 NORMAL	= "\x1B[0m"
 RED		= "\x1B[31m"
 GREEN	= "\x1B[32m"
@@ -54,7 +60,7 @@ LIGHT	= "\e[2m"
 ITALIC	= "\e[3m"
 ULINE	= "\e[4m"
 DEBUGFLG	= -fsanitize=address -g3
-DEBUGFLG	=
+# DEBUGFLG	=
 
 all: $(NAME)
 
@@ -62,7 +68,7 @@ $(NAME): $(OBJ_PATH) $(OBJP)
 	@printf $(CYAN)"-> create program : $(NAME)\n"$(NORMAL)
 	@$(CPP) $(FLAGS) -o $(NAME) $(OBJP) $(DEBUGFLG)
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp $(HEADP)
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp $(HEADP) $(LIBP)
 	@printf $(YELLOW)"-> $<\n"$(NORMAL)
 	@$(CPP) $(FLAGS) -c $< -o $@ $(INCP) $(DEBUGFLG)
 

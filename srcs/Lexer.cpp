@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:36:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/14 18:50:57 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/15 22:52:04 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,9 +136,9 @@ void Lexer::lexLine(std::string line, int line_row) {
 		}
 		if (!found) {
 			std::ostringstream sstr;
-			sstr << RED "LexerError:" << line_row << ":" << pos
-			<< EOC " error: \"" << &line[it - line.cbegin()] << "\"\n" << line
-			<< "\n" << std::string(pos, ' ') << GREEN "^" EOC;
+			sstr << RED "LexerError:" << line_row << ":" << pos << ":" EOC
+			" error: unkown expression \"" << &line[it - line.cbegin()]
+			<< "\"\n" << line << "\n" << std::string(pos, ' ') << GREEN "^" EOC;
 			throw Lexer::LexerException(sstr.str().c_str());
 		}
 	}

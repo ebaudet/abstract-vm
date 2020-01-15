@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:15 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/14 19:58:15 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/15 23:11:03 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ class Parser {
 
 		// Methods
 		void	clear();
+		void	parseToken( std::vector<Token> &token_list, std::string line, int line_row );
 		int		iteratorInc( std::vector<Token>::iterator &it, bool expected = false );
-		void	parseToken( std::vector<Token> &tokenList, std::string line );
 		void	parseInstruction(std::vector<Token>::iterator &it );
 		void	parseValue( std::vector<Token>::iterator &it );
 		void	parseSpace( std::vector<Token>::iterator &it, bool expected = false );
@@ -40,7 +40,7 @@ class Parser {
 		void	parseBracket( std::vector<Token>::iterator &it );
 		void	parseNumber( std::vector<Token>::iterator &it );
 		const std::string	getMessageError( const char *what_arg );
-		void	execute( Factory &factory, Instruction &instruction );
+		int		execute( Factory &factory, Instruction &instruction );
 
 		// Accessors
 		eTokenType	GetTypeNumber() const;
@@ -63,7 +63,7 @@ class Parser {
 		eTokenType			_typeNumber;
 		std::string			_val;
 		int					_nbParams;
-		void (Instruction::*_instruction)(const IOperand *);
+		int (Instruction::*_instruction)(const IOperand *);
 		eOperandType		_operandType;
 		size_t				_lineRow;
 		size_t				_pos;

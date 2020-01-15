@@ -1,4 +1,10 @@
 push ; push without param
+push
+push 55 ; push with bad value
+push int32() ; without value
+push int32(25.5) ; int with zvalue
+push float(55) ; float with nvalue
+push float(55.5) ; float with nvalue
 push int32(42)
 push int32(2)
 sub int32(12) ; push with extra param

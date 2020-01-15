@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:22 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/14 19:57:58 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/15 23:18:47 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,10 @@ void Parser::clear() {
 void Parser::parseType(std::vector<Token>::iterator &it)
 {
 	if ( it == _tokenList->end() )
-		throw ParserException("Type expected.", *this);
+		throw ParserException("Argument expected.", *this);
 
+	if ( it->GetType() == eTokenType::Comment )
+		throw ParserException("Argument expected.", *it, _line);
 	if ( it->GetType() != eTokenType::Type )
 		throw ParserException("Type expected.", *it, _line);
 
@@ -137,10 +139,10 @@ void Parser::parseBracket(std::vector<Token>::iterator &it)
 void Parser::parseValue(std::vector<Token>::iterator &it)
 {
 	if (it == _tokenList->end())
-		throw ParserException("Value expected.", *this);
+		throw ParserException("Argument expected.", *this);
 
 	if (it->GetType() == eTokenType::Comment)
-		throw ParserException("Arguments expected.", *it, _line);
+		throw ParserException("Argument expected.", *it, _line);
 
 	parseSpace(it, true);
 	parseType(it);
@@ -180,17 +182,14 @@ void Parser::parseSpace(std::vector<Token>::iterator &it, bool expected)
 }
 
 
-void Parser::parseToken(std::vector<Token> &tokenList, std::string line) {
-	_tokenList = &tokenList;
+void Parser::parseToken(std::vector<Token> &token_list, std::string line, int line_row) {
+	_tokenList = &token_list;
 	std::vector<Token>::iterator it = _tokenList->begin();
 	_line = line;
+	_lineRow = line_row;
 
-	if (tokenList.size() == 0)
+	if (_tokenList->size() == 0)
 		return;
-
-	// std::cout << "Test: " << tokenList << std::endl;
-	// std::cout << "Parser : " << *this << std::endl;
-	// std::cout << "<parseToken>" << std::endl;
 
 	parseSpace(it);
 	if (it->GetType() == eTokenType::Comment)
@@ -206,24 +205,24 @@ void Parser::parseToken(std::vector<Token> &tokenList, std::string line) {
 
 	if (it != _tokenList->end())
 		throw ParserException("No argument exected.", *it, _line);
-
-	// if works, all good params have to be save in the private members in order
-	// to launch them.
-	// need :
-	// - function (fonction's pointer of Instruction's class)
-	// - value type (eOperandType)
-	// - value value (string)
 }
 
-void	Parser::execute( Factory &factory, Instruction &instruction ) {
-	if (_instruction == NULL)
-		return ;
-	if (_nbParams == 0) {
+int		Parser::execute( Factory &factory, Instruction &instruction ) {
+	int result = EXIT_SUCCESS;
 
-		(instruction.*_instruction)(NULL);
-	} else {
-		(instruction.*_instruction)(factory.createOperand(_operandType, _val));
+	try {
+		if (_instruction == NULL)
+			result = EXIT_SUCCESS;
+		if (_nbParams == 0) {
+			result = (instruction.*_instruction)(NULL);
+		} else {
+			result = (instruction.*_instruction)(factory.createOperand(_operandType, _val));
+		}
+	} catch (std::exception &e) {
+		std::cerr << "Exception on line " << _lineRow << ": " << _line << std::endl;
+		throw;
 	}
+	return result;
 }
 
 int		Parser::iteratorInc( std::vector<Token>::iterator &it, bool expected )
@@ -245,7 +244,7 @@ const std::string Parser::getMessageError( const char *what_arg ) {
 	std::ostringstream sstr;
 
 	sstr << RED "ParserError:" << _lineRow << ":"
-	<< _pos << EOC " " << what_arg << "\n" << _line << "\n"
+	<< _pos << ":" EOC " " << what_arg << "\n" << _line << "\n"
 	<< std::string(_pos, ' ') << GREEN "^" EOC;
 
 	return sstr.str().c_str();
@@ -265,8 +264,8 @@ Parser::ParserException::ParserException( const char* what_arg )
 Parser::ParserException::ParserException( const char* what_arg, Token &token, std::string line )
 : std::runtime_error( std::string(
 		RED "ParserError:" + std::to_string(token.GetLine()) + ":"
-		+ std::to_string(token.GetPos())+ EOC " " + what_arg + "\n" + line + "\n"
-		+ std::string(token.GetPos(), ' ') + GREEN "^" EOC
+		+ std::to_string(token.GetPos())+ ":" EOC " " + what_arg + "\n" + line
+		+ "\n" + std::string(token.GetPos(), ' ') + GREEN "^" EOC
 	).c_str() ) {}
 
 // >  int32

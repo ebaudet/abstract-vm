@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/14 20:07:06 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/15 23:17:33 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ Instruction::Instruction() {
 	instruction_exited = false;
 	verbose = false;
 	continue_error = false;
+	interactive = false;
 }
 
 Instruction::Instruction( Instruction const &src ) {
@@ -52,8 +53,13 @@ Instruction::~Instruction() {
 // -- Operators ----------------------------------------------------------------
 
 Instruction &Instruction::operator=( Instruction const &rhs ) {
-	if ( this != &rhs )
+	if ( this != &rhs ) {
 		deque = new std::deque<const IOperand *>(*rhs.deque);
+		instruction_exited = rhs.instruction_exited;
+		verbose = rhs.verbose;
+		continue_error = rhs.continue_error;
+		interactive = rhs.interactive;
+	}
 	return *this;
 }
 
@@ -82,21 +88,25 @@ Instruction::ExitException::ExitException()
  * ◦ float(z) : Creates a float with value z.
  * ◦ double(z) : Creates a double with value z.
  */
-void Instruction::push(const IOperand *value) {
+int		Instruction::push(const IOperand *value) {
 	deque->push_front(value);
+
+	return EXIT_SUCCESS;
 }
 
 /**
  * Unstacks the value from the top of the stack. If the stack is empty, the
  * program execution must stop with an error.
  */
-void Instruction::pop(const IOperand *value) {
+int		Instruction::pop(const IOperand *value) {
 	(void)value;
 	if (deque->size() == 0)
-		throw Instruction::StackException( "Pop: Stack is empty." );
-	const IOperand *A = deque->front();
+		throw Instruction::StackException( "pop: Stack is empty." );
+	const IOperand *front_deque = deque->front();
 	deque->pop_front();
-	delete A;
+	delete front_deque;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -104,7 +114,7 @@ void Instruction::pop(const IOperand *value) {
  * one WITHOUT CHANGING the stack. Each value is separated from the next one
  * by a newline.
  */
-void Instruction::dump(const IOperand *value) {
+int		Instruction::dump(const IOperand *value) {
 	(void)value;
 	std::deque<const IOperand *>::iterator it;
 	if (verbose)
@@ -112,6 +122,8 @@ void Instruction::dump(const IOperand *value) {
 	for (it = deque->begin(); it != deque->end(); ++it) {
 		std::cout << (*it)->toString() << std::endl;
 	}
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -120,13 +132,17 @@ void Instruction::dump(const IOperand *value) {
  * stop with an error. The value v has the same form that those passed as parameters
  * to the instruction push.
  */
-void Instruction::assert_val(const IOperand *value) {
+int		Instruction::assert_val(const IOperand *value) {
+	if (deque->size() == 0)
+		throw Instruction::StackException( "assert: Empty stack." );
 	const IOperand *test = deque->front();
 	if (*value != *test) {
 		delete value;
 		throw Instruction::AssertException();
 	}
 	delete value;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -134,10 +150,10 @@ void Instruction::assert_val(const IOperand *value) {
  * result. If the number of values on the stack is strictly inferior to 2, the program
  * execution must stop with an error.
  */
-void Instruction::add(const IOperand *value) {
+int		Instruction::add(const IOperand *value) {
 	(void)value;
 	if (deque->size() < 2)
-		throw Instruction::StackException( "Add: Stack is lower 2." );
+		throw Instruction::StackException( "add: Stack is lower 2." );
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
@@ -147,6 +163,8 @@ void Instruction::add(const IOperand *value) {
 	push(C);
 	delete A;
 	delete B;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -154,10 +172,10 @@ void Instruction::add(const IOperand *value) {
  * result. If the number of values on the stack is strictly inferior to 2, the program
  * execution must stop with an error.
  */
-void Instruction::sub(const IOperand *value) {
+int		Instruction::sub(const IOperand *value) {
 	(void)value;
 	if (deque->size() < 2)
-		throw Instruction::StackException( "Add: Stack is lower 2." );
+		throw Instruction::StackException( "sub: Stack is lower 2." );
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
@@ -167,6 +185,8 @@ void Instruction::sub(const IOperand *value) {
 	push(C);
 	delete A;
 	delete B;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -174,10 +194,10 @@ void Instruction::sub(const IOperand *value) {
  * result. If the number of values on the stack is strictly inferior to 2, the program
  * execution must stop with an error.
  */
-void Instruction::mul(const IOperand *value) {
+int		Instruction::mul(const IOperand *value) {
 	(void)value;
 	if (deque->size() < 2)
-		throw Instruction::StackException( "Add: Stack is lower 2." );
+		throw Instruction::StackException( "mul: Stack is lower 2." );
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
@@ -187,6 +207,8 @@ void Instruction::mul(const IOperand *value) {
 	push(C);
 	delete A;
 	delete B;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -197,10 +219,10 @@ void Instruction::mul(const IOperand *value) {
  * point. If you don’t understand why, some will understand. The linked question is
  * an open one, there’s no definitive answer.
  */
-void Instruction::div(const IOperand *value) {
+int		Instruction::div(const IOperand *value) {
 	(void)value;
 	if (deque->size() < 2)
-		throw Instruction::StackException( "Add: Stack is lower 2." );
+		throw Instruction::StackException( "div: Stack is lower 2." );
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
@@ -210,6 +232,8 @@ void Instruction::div(const IOperand *value) {
 	push(C);
 	delete A;
 	delete B;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -219,10 +243,10 @@ void Instruction::div(const IOperand *value) {
  * the program execution must stop with an error too. Same note as above about fp
  * values.
  */
-void Instruction::mod(const IOperand *value) {
+int		Instruction::mod(const IOperand *value) {
 	(void)value;
 	if (deque->size() < 2)
-		throw Instruction::StackException( "Add: Stack is lower 2." );
+		throw Instruction::StackException( "mod: Stack is lower 2." );
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
@@ -232,6 +256,8 @@ void Instruction::mod(const IOperand *value) {
 	push(C);
 	delete A;
 	delete B;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -239,14 +265,18 @@ void Instruction::mod(const IOperand *value) {
  * see the instruction assert), then interprets it as an ASCII value and displays the
  * corresponding character on the standard output.
  */
-void Instruction::print(const IOperand *value) {
+int		Instruction::print(const IOperand *value) {
 	(void)value;
+	if (deque->size() == 0)
+		throw Instruction::StackException( "print: Empty stack." );
 	const IOperand *to_print = deque->front();
 	if (to_print->getType() != eOperandType::Int8)
 		throw Instruction::AssertException();
 	if (verbose)
 		std::cout << BLUE "print >" EOC << std::endl;
 	std::cout << static_cast<char>( std::stod( to_print->toString() ) ) << std::endl;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -254,12 +284,14 @@ void Instruction::print(const IOperand *value) {
  * appears while all others instruction has been processed, the execution must stop
  * with an error.
  */
-void Instruction::exit(const IOperand *value) {
+int		Instruction::exit(const IOperand *value) {
 	(void)value;
 	while (deque->size() > 0) {
 		pop();
 	}
 	instruction_exited = true;
+
+	return 42;
 }
 
 void Instruction::test_exit() {
