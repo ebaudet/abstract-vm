@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:20:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 21:08:55 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 21:35:03 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int		readFromFile( char *file, Instruction &instruction ) {
 	// return result;
 	std::vector <Parser *> parsers;
 	Factory factory = Factory();
+	// todo : check right of the file in input for correct message errors.
 	std::ifstream infile(file);
 	std::string line;
 	int error = 0;
