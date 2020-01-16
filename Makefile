@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/09 20:29:34 by ebaudet           #+#    #+#              #
-#    Updated: 2020/01/15 23:23:16 by ebaudet          ###   ########.fr        #
+#    Updated: 2020/01/16 12:31:32 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,7 @@ LIGHT	= "\e[2m"
 ITALIC	= "\e[3m"
 ULINE	= "\e[4m"
 DEBUGFLG	= -fsanitize=address -g3
-# DEBUGFLG	=
+DEBUGFLG	=
 
 all: $(NAME)
 

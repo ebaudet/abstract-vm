@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/15 23:17:33 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 12:54:08 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ std::map<std::string, Instruction::InstructionArg>	Instruction::instrArgs = {
 	{"div", {0, &Instruction::div}},
 	{"mod", {0, &Instruction::mod}},
 	{"print", {0, &Instruction::print}},
-	{"exit", {0, &Instruction::exit}}
+	{"exit", {0, &Instruction::exit}},
 };
 
 // -- Constructors -------------------------------------------------------------

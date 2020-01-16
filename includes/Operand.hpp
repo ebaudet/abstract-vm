@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 19:57:26 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 16:17:44 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 12:48:03 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,9 @@ public:
 		public:
 			OverflowException() : std::overflow_error( "Overflow on a value" ) {}
 	};
-	class UnderflowException : public std::overflow_error {
+	class UnderflowException : public std::underflow_error {
 		public:
-			UnderflowException() : std::overflow_error( "Underflow on a value" ) {}
+			UnderflowException() : std::underflow_error( "Underflow on a value" ) {}
 	};
 
 private:

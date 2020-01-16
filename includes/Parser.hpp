@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:15 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/15 23:11:03 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 12:27:13 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class Parser {
 		void	parseType( std::vector<Token>::iterator &it );
 		void	parseBracket( std::vector<Token>::iterator &it );
 		void	parseNumber( std::vector<Token>::iterator &it );
+		bool	parseComment( std::vector<Token>::iterator &it );
 		const std::string	getMessageError( const char *what_arg );
 		int		execute( Factory &factory, Instruction &instruction );
 

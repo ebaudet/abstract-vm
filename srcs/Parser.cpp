@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:22 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/15 23:18:47 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 12:33:58 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,17 @@ void Parser::parseSpace(std::vector<Token>::iterator &it, bool expected)
 		throw ParserException("Space expected.", *it, _line);
 }
 
+bool	Parser::parseComment(std::vector<Token>::iterator &it) {
+	if (it == _tokenList->end()) {
+		return false;
+	}
+
+	if (it->GetType() == eTokenType::Comment) {
+		iteratorInc(it);
+		return true;
+	}
+	return false;
+}
 
 void Parser::parseToken(std::vector<Token> &token_list, std::string line, int line_row) {
 	_tokenList = &token_list;
@@ -192,17 +203,13 @@ void Parser::parseToken(std::vector<Token> &token_list, std::string line, int li
 		return;
 
 	parseSpace(it);
-	if (it->GetType() == eTokenType::Comment)
-		return ;
+	parseComment(it);
 	parseInstruction(it);
 	if (_nbParams > 0) {
 		parseValue(it);
 	}
 	parseSpace(it);
-	if (it->GetType() == eTokenType::Comment) {
-		iteratorInc(it);
-	}
-
+	parseComment(it);
 	if (it != _tokenList->end())
 		throw ParserException("No argument exected.", *it, _line);
 }
@@ -213,11 +220,10 @@ int		Parser::execute( Factory &factory, Instruction &instruction ) {
 	try {
 		if (_instruction == NULL)
 			result = EXIT_SUCCESS;
-		if (_nbParams == 0) {
+		else if (_nbParams == 0)
 			result = (instruction.*_instruction)(NULL);
-		} else {
+		else
 			result = (instruction.*_instruction)(factory.createOperand(_operandType, _val));
-		}
 	} catch (std::exception &e) {
 		std::cerr << "Exception on line " << _lineRow << ": " << _line << std::endl;
 		throw;

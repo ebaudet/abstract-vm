@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/15 19:45:30 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/15 22:23:03 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 12:44:30 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,7 @@ int		argparse( int ac, char **av, Instruction &instruction ) {
 				instruction.continue_error = true;
 				break;
 			case '?':
-				short_usage( av[0] );
-				/* getopt_long already printed an error message. */
-				break;
+				return short_usage( av[0] );
 			case 'h': default:
 				return (usage( av[0] ));
 		}
