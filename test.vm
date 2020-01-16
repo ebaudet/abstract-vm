@@ -1,3 +1,11 @@
+push int8(5)
+dump
+abs
+dump
+
+
+exit
+
 push int32(5)
 add
 sub

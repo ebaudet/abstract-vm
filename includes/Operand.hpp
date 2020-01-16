@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 19:57:26 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 12:48:03 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 20:41:46 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@
 #include <cmath>
 #include <stdexcept>
 
-enum eOperationType { Multiplication, Division, Addition, Substration, Modulo };
+#include <iostream>
+
+enum eOperationType { Multiplication, Division, Addition, Substration, Modulo, Pow };
 
 template <typename T>
 class Operand : public IOperand {
@@ -77,16 +79,34 @@ public:
 		return _operation( rhs, eOperationType::Modulo );
 	}
 
+	// -- Bonus ---------------------------------------
+
 	bool	operator==( IOperand const & rhs ) const {
-		double rval = std::stod( rhs.toString() );
 		double lval = std::stod( _value );
-		return (rval == lval);
+		double rval = std::stod( rhs.toString() );
+		return ( lval == rval );
 	}
 
 	bool	operator!=( IOperand const & rhs ) const {
-		double rval = std::stod( rhs.toString() );
 		double lval = std::stod( _value );
-		return (rval != lval);
+		double rval = std::stod( rhs.toString() );
+		return ( lval != rval );
+	}
+
+	bool	operator<( IOperand const & rhs ) const {
+		double lval = std::stod( _value );
+		double rval = std::stod( rhs.toString() );
+		return ( lval < rval );
+	}
+
+	bool	operator>( IOperand const & rhs ) const {
+		double lval = std::stod( _value );
+		double rval = std::stod( rhs.toString() );
+		return ( lval > rval );
+	}
+
+	IOperand const *	pow( IOperand const & rhs ) const {
+		return _operation( rhs, eOperationType::Pow );
 	}
 
 	/***********************************************
@@ -165,6 +185,9 @@ private:
 					throw Operand::DivideByZeroException();
 				result = std::fmod( lval, rval );
 				break;
+			case eOperationType::Pow:
+				result = std::pow( lval, rval );
+				break;
 			default:
 				throw Exception::Operand();
 				break;
@@ -177,7 +200,7 @@ private:
 		int precision = std::max( rhs.getPrecision(), this->getPrecision() );
 		eOperandType type = static_cast<eOperandType>( precision );
 		std::ostringstream strs;
-		strs << result;
+		strs << std::fixed << result;
 		return _factory.createOperand( type, strs.str() );
 	}
 };

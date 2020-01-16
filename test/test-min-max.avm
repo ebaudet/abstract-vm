@@ -1,0 +1,50 @@
+; ---------------------
+; test-min-max.avm   --
+; ---------------------
+
+push int8(6)
+push int8(2)
+debug
+min
+debug
+
+sep
+clear
+
+push int8(2)
+push int16(14)
+debug
+min
+debug
+
+sep
+clear
+
+push int32(30)
+push int8(85)
+debug
+max
+debug
+
+sep
+clear
+
+push int8(-10)
+push float(2.2)
+debug
+min
+debug
+
+sep
+clear
+
+push int8(11)
+push double(-2.0)
+debug
+max
+debug
+
+sep
+clear
+
+exit

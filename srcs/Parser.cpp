@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:22 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 12:33:58 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 18:37:28 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ void Parser::parseToken(std::vector<Token> &token_list, std::string line, int li
 	parseSpace(it);
 	parseComment(it);
 	if (it != _tokenList->end())
-		throw ParserException("No argument exected.", *it, _line);
+		throw ParserException("No argument expected.", *it, _line);
 }
 
 int		Parser::execute( Factory &factory, Instruction &instruction ) {
@@ -264,9 +264,10 @@ Parser::ParserException::ParserException()
 Parser::ParserException::ParserException( const char* what_arg )
 : std::runtime_error( std::string(std::string("ParserError: ") + what_arg).c_str() ) {}
 
-// >  int32
-//    ^
-// ParserError:2:1: Instruction expected.
+
+// ParserError:5:10: Type NVal expected.
+// push int8(127.5)
+//           ^
 Parser::ParserException::ParserException( const char* what_arg, Token &token, std::string line )
 : std::runtime_error( std::string(
 		RED "ParserError:" + std::to_string(token.GetLine()) + ":"
@@ -274,9 +275,8 @@ Parser::ParserException::ParserException( const char* what_arg, Token &token, st
 		+ "\n" + std::string(token.GetPos(), ' ') + GREEN "^" EOC
 	).c_str() ) {}
 
-// >  int32
-//    ^
-// ParserError:2:1: Instruction expected.
+// ParserError:5:10: Type NVal expected.
+// push int8(127.5)
+//           ^
 Parser::ParserException::ParserException( const char* what_arg, Parser &parser )
 : std::runtime_error( parser.getMessageError( what_arg ) ) {}
-

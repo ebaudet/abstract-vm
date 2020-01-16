@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:36:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/15 22:52:04 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 18:06:53 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,6 @@ void	p_error(std::string error) {
 }
 
 // -- Public members -----------------------------------------------------------
-
-std::map<std::string, int>	Lexer::instrArg = {
-	{"push", 1},
-	{"pop", 0},
-	{"dump", 0},
-	{"assert", 1},
-	{"add", 0},
-	{"sub", 0},
-	{"mul", 0},
-	{"div", 0},
-	{"mod", 0},
-	{"print", 0},
-	{"exit", 0}
-};
 
 std::map<std::string, Lexer::TypeArg>	Lexer::typeArg = {
 	{"int8", {eTokenType::NVal, eOperandType::Int8}},

@@ -1,0 +1,98 @@
+; -----------------
+; test-abs.avm   --
+; -----------------
+
+push int8(-127)
+dump
+abs
+dump
+
+sep
+clear
+
+push int8(127)
+dump
+abs
+dump
+
+sep
+clear
+
+push int8(-128)
+dump
+abs
+dump
+
+sep
+clear
+
+push int8(127)
+dump
+abs
+dump
+
+sep
+clear
+
+push int32(-2147483648)
+dump
+abs
+dump
+
+sep
+clear
+
+push int32(2147483647)
+dump
+abs
+dump
+
+sep
+clear
+
+push int32(0)
+dump
+abs
+dump
+
+sep
+clear
+
+push int32(-0)
+dump
+abs
+dump
+
+sep
+clear
+
+push int32(1)
+dump
+abs
+dump
+
+sep
+clear
+
+push int32(-1)
+dump
+abs
+dump
+
+sep
+clear
+
+push int32(42)
+dump
+abs
+dump
+
+sep
+clear
+
+push int32(-42)
+dump
+abs
+dump
+
+exit

@@ -6,13 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 12:54:08 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 21:13:33 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Instruction.hpp"
 #include <iostream>
 #include "Color.hpp"
+#include "Lexer.hpp"
 
 // -- Public members -----------------------------------------------------------
 
@@ -28,6 +29,15 @@ std::map<std::string, Instruction::InstructionArg>	Instruction::instrArgs = {
 	{"mod", {0, &Instruction::mod}},
 	{"print", {0, &Instruction::print}},
 	{"exit", {0, &Instruction::exit}},
+	// bonus
+	{"ls", {0, &Instruction::dump}},
+	{"abs", {0, &Instruction::abs}},
+	{"debug", {0, &Instruction::debug}},
+	{"clear", {0, &Instruction::clear}},
+	{"sep", {0, &Instruction::sep}},
+	{"min", {0, &Instruction::min}},
+	{"max", {0, &Instruction::max}},
+	{"pow", {0, &Instruction::pow}},
 };
 
 // -- Constructors -------------------------------------------------------------
@@ -77,7 +87,7 @@ Instruction::AssertException::AssertException()
 Instruction::ExitException::ExitException()
 : std::runtime_error( "Exit instruction is missing." ) {}
 
-// -- Public methods -----------------------------------------------------------
+// -- Instructions -------------------------------------------------------------
 
 /**
  * Pushes the value v at the top of the stack. The value v must have one of
@@ -89,6 +99,8 @@ Instruction::ExitException::ExitException()
  * ◦ double(z) : Creates a double with value z.
  */
 int		Instruction::push(const IOperand *value) {
+	if (verbose)
+		std::cout << BLUE "<push>" EOC << std::endl;
 	deque->push_front(value);
 
 	return EXIT_SUCCESS;
@@ -100,6 +112,8 @@ int		Instruction::push(const IOperand *value) {
  */
 int		Instruction::pop(const IOperand *value) {
 	(void)value;
+	if (verbose)
+		std::cout << BLUE "<pop>" EOC << std::endl;
 	if (deque->size() == 0)
 		throw Instruction::StackException( "pop: Stack is empty." );
 	const IOperand *front_deque = deque->front();
@@ -118,7 +132,7 @@ int		Instruction::dump(const IOperand *value) {
 	(void)value;
 	std::deque<const IOperand *>::iterator it;
 	if (verbose)
-		std::cout << BLUE "dump >" EOC << std::endl;
+		std::cout << BLUE "<dump>" EOC << std::endl;
 	for (it = deque->begin(); it != deque->end(); ++it) {
 		std::cout << (*it)->toString() << std::endl;
 	}
@@ -133,6 +147,8 @@ int		Instruction::dump(const IOperand *value) {
  * to the instruction push.
  */
 int		Instruction::assert_val(const IOperand *value) {
+	if (verbose)
+		std::cout << BLUE "<assert>" EOC << std::endl;
 	if (deque->size() == 0)
 		throw Instruction::StackException( "assert: Empty stack." );
 	const IOperand *test = deque->front();
@@ -152,6 +168,8 @@ int		Instruction::assert_val(const IOperand *value) {
  */
 int		Instruction::add(const IOperand *value) {
 	(void)value;
+	if (verbose)
+		std::cout << BLUE "<add>" EOC << std::endl;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "add: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -174,14 +192,15 @@ int		Instruction::add(const IOperand *value) {
  */
 int		Instruction::sub(const IOperand *value) {
 	(void)value;
+	if (verbose)
+		std::cout << BLUE "<sub>" EOC << std::endl;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "sub: Stack is lower 2." );
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
 	deque->pop_front();
-	const IOperand *C;
-	C = *A - *B;
+	const IOperand *C = *A - *B;
 	push(C);
 	delete A;
 	delete B;
@@ -196,6 +215,8 @@ int		Instruction::sub(const IOperand *value) {
  */
 int		Instruction::mul(const IOperand *value) {
 	(void)value;
+	if (verbose)
+		std::cout << BLUE "<mul>" EOC << std::endl;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "mul: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -221,6 +242,8 @@ int		Instruction::mul(const IOperand *value) {
  */
 int		Instruction::div(const IOperand *value) {
 	(void)value;
+	if (verbose)
+		std::cout << BLUE "<div>" EOC << std::endl;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "div: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -245,6 +268,8 @@ int		Instruction::div(const IOperand *value) {
  */
 int		Instruction::mod(const IOperand *value) {
 	(void)value;
+	if (verbose)
+		std::cout << BLUE "<mod>" EOC << std::endl;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "mod: Stack is lower 2." );
 	const IOperand *A = deque->front();
@@ -267,13 +292,13 @@ int		Instruction::mod(const IOperand *value) {
  */
 int		Instruction::print(const IOperand *value) {
 	(void)value;
+	if (verbose)
+		std::cout << BLUE "<print>" EOC << std::endl;
 	if (deque->size() == 0)
 		throw Instruction::StackException( "print: Empty stack." );
 	const IOperand *to_print = deque->front();
 	if (to_print->getType() != eOperandType::Int8)
 		throw Instruction::AssertException();
-	if (verbose)
-		std::cout << BLUE "print >" EOC << std::endl;
 	std::cout << static_cast<char>( std::stod( to_print->toString() ) ) << std::endl;
 
 	return EXIT_SUCCESS;
@@ -286,6 +311,8 @@ int		Instruction::print(const IOperand *value) {
  */
 int		Instruction::exit(const IOperand *value) {
 	(void)value;
+	if (verbose)
+		std::cout << BLUE "<exit>" EOC << std::endl;
 	while (deque->size() > 0) {
 		pop();
 	}
@@ -294,16 +321,153 @@ int		Instruction::exit(const IOperand *value) {
 	return 42;
 }
 
-void Instruction::test_exit() {
-	if (!instruction_exited)
-		throw Instruction::ExitException();
+// -- Bonus Instructions -------------------------------------------------------
+
+/**
+ * Change top value to his absolute.
+ */
+int		Instruction::abs( const IOperand *value ) {
+	(void)value;
+	if (verbose)
+		std::cout << BLUE "<abs>" EOC << std::endl;
+	if (deque->size() == 0)
+		throw Instruction::StackException( "abs: Empty stack." );
+
+	Factory factory = Factory();
+
+	const IOperand *val = deque->front();
+	if ( val->toString().at(0) == '-' ) {
+		const IOperand *absVal = factory.createOperand(val->getType(), val->toString().substr( 1 ));
+		pop();
+		push (absVal);
+	}
+
+	return EXIT_SUCCESS;
+}
+
+int		Instruction::min( const IOperand *value ) {
+	(void)value;
+	if (verbose)
+		std::cout << BLUE "<min>" EOC << std::endl;
+
+	if (deque->size() < 2)
+		throw Instruction::StackException( "min: Stack is lower 2." );
+	const IOperand *A = deque->front();
+	deque->pop_front();
+	const IOperand *B = deque->front();
+	deque->pop_front();
+	if (*A < *B) {
+		push( A );
+		delete B;
+	} else {
+		push( B );
+		delete A;
+	}
+
+	return EXIT_SUCCESS;
+}
+
+int		Instruction::max( const IOperand *value ) {
+	(void)value;
+	if (verbose)
+		std::cout << BLUE "<max>" EOC << std::endl;
+	if (deque->size() < 2)
+		throw Instruction::StackException( "max: Stack is lower 2." );
+	const IOperand *A = deque->front();
+	deque->pop_front();
+	const IOperand *B = deque->front();
+	deque->pop_front();
+	if (*A > *B) {
+		push( A );
+		delete B;
+	} else {
+		push( B );
+		delete A;
+	}
+
+	return EXIT_SUCCESS;
+}
+
+// TODO : pow function
+int		Instruction::pow( const IOperand *value ) {
+	(void)value;
+
+	if (verbose)
+		std::cout << BLUE "<pow>" EOC << std::endl;
+
+	if (deque->size() < 2)
+		throw Instruction::StackException( "pow: Stack is lower 2." );
+	const IOperand *A = deque->front();
+	deque->pop_front();
+	const IOperand *B = deque->front();
+	deque->pop_front();
+	const IOperand *C;
+	C = A->pow(*B);
+	push(C);
+	delete A;
+	delete B;
+
+
+	return EXIT_SUCCESS;
+}
+
+/**
+ * Debug print all the stack.
+ **/
+int		Instruction::debug(const IOperand *value) {
+	(void)value;
+	std::deque<const IOperand *>::iterator it;
+
+	if (verbose)
+		std::cout << BLUE "<debug>" EOC << std::endl;
+
+	for (it = deque->begin(); it != deque->end(); ++it) {
+		std::cout << dval(*it) << std::endl;
+	}
+
+	return EXIT_SUCCESS;
 }
 
 /*
  * Clear instructions list.
  */
-void Instruction::clear() {
+int		Instruction::clear(const IOperand *value) {
+	(void)value;
+	if (verbose)
+		std::cout << BLUE "<clear>" EOC << std::endl;
 	while (deque->size() > 0)
 		pop();
 	instruction_exited = false;
+	return EXIT_SUCCESS;
+}
+
+/*
+ * Clear instructions list.
+ */
+int		Instruction::sep(const IOperand *value) {
+	(void)value;
+	std::cout << "=====================================" << std::endl;
+	return EXIT_SUCCESS;
+}
+
+// -- Public methods -----------------------------------------------------------
+
+void Instruction::test_exit() {
+	if (!instruction_exited)
+		throw Instruction::ExitException();
+}
+
+std::string Instruction::dval(const IOperand *value) {
+	std::string result;
+	std::string type = "unknown";
+
+	for (auto &&i : Lexer::typeArg) {
+		if (i.second.operandType == value->getType()) {
+			type = i.first;
+		}
+	}
+
+	result = "{" + value->toString() + ", " + type + ", "
+	+ std::to_string(value->getPrecision())  + "}";
+	return result;
 }

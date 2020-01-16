@@ -1,0 +1,50 @@
+; ---------------------
+; test-pow.avm       --
+; ---------------------
+
+push int8(6)
+push int8(2)
+debug
+pow
+debug
+
+sep
+clear
+
+push int16(14)
+push int8(2)
+debug
+pow
+debug
+
+sep
+clear
+
+push int32(30)
+push int8(2)
+debug
+pow
+debug
+
+sep
+clear
+
+push int8(-10)
+push float(2)
+debug
+pow
+debug
+
+sep
+clear
+
+push int8(11)
+push double(-2.0)
+debug
+pow
+debug
+
+sep
+clear
+
+exit

@@ -1,0 +1,46 @@
+; --------------
+; test.avm    --
+; --------------
+
+push int8(127)
+push int32(2147483647)
+dump
+sub
+dump
+
+sep
+
+clear
+push int8(127)
+push int32(2147483646)
+dump
+sub
+dump
+
+sep
+
+clear
+push int8(127)
+push int32(2147483603)
+dump
+sub
+dump
+
+sep
+
+clear
+push int8(127)
+push int32(2147483000)
+dump
+sub
+dump
+
+sep
+
+clear
+push int8(127)
+push int32(2147410500)
+dump
+sub
+dump
+exit

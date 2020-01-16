@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:18 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/08 11:44:49 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 20:26:42 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,13 @@ public:
 
 	virtual ~IOperand( void ) {}
 
+	// -- bonus ----------------------------------------------------------------
+
 	virtual bool	operator==( IOperand const & rhs ) const = 0; // ==
 	virtual bool	operator!=( IOperand const & rhs ) const = 0; // !=
+	virtual bool	operator<( IOperand const & rhs ) const = 0; // <!=>
+	virtual bool	operator>( IOperand const & rhs ) const = 0; // >
+	virtual IOperand const *	pow( IOperand const & rhs ) const = 0; // pow
 
 };
 
