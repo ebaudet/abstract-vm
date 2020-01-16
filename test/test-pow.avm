@@ -30,7 +30,7 @@ sep
 clear
 
 push int8(-10)
-push float(2)
+push float(2.0)
 debug
 pow
 debug

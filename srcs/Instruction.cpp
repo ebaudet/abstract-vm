@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 21:13:33 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/16 21:30:44 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ Instruction::ExitException::ExitException()
 // -- Instructions -------------------------------------------------------------
 
 /**
+ *  -- Push --
  * Pushes the value v at the top of the stack. The value v must have one of
  * the following form:
  * ◦ int8(n) : Creates an 8-bit integer with value n.
@@ -97,7 +98,7 @@ Instruction::ExitException::ExitException()
  * ◦ int32(n) : Creates a 32-bit integer with value n.
  * ◦ float(z) : Creates a float with value z.
  * ◦ double(z) : Creates a double with value z.
- */
+ **/
 int		Instruction::push(const IOperand *value) {
 	if (verbose)
 		std::cout << BLUE "<push>" EOC << std::endl;
@@ -107,9 +108,10 @@ int		Instruction::push(const IOperand *value) {
 }
 
 /**
+ *  -- Pop --
  * Unstacks the value from the top of the stack. If the stack is empty, the
  * program execution must stop with an error.
- */
+ **/
 int		Instruction::pop(const IOperand *value) {
 	(void)value;
 	if (verbose)
@@ -124,10 +126,11 @@ int		Instruction::pop(const IOperand *value) {
 }
 
 /**
+ *  -- Dump --
  * Displays each value of the stack, from the most recent one to the oldest
  * one WITHOUT CHANGING the stack. Each value is separated from the next one
  * by a newline.
- */
+ **/
 int		Instruction::dump(const IOperand *value) {
 	(void)value;
 	std::deque<const IOperand *>::iterator it;
@@ -141,11 +144,12 @@ int		Instruction::dump(const IOperand *value) {
 }
 
 /**
+ *  -- Assert --
  * Asserts that the value at the top of the stack is equal to the one passed
- * as parameter for this instruction. If it is not the case, the program execution must
- * stop with an error. The value v has the same form that those passed as parameters
- * to the instruction push.
- */
+ * as parameter for this instruction. If it is not the case, the program
+ * execution must stop with an error. The value v has the same form that those
+ * passed as parameters to the instruction push.
+ **/
 int		Instruction::assert_val(const IOperand *value) {
 	if (verbose)
 		std::cout << BLUE "<assert>" EOC << std::endl;
@@ -162,10 +166,11 @@ int		Instruction::assert_val(const IOperand *value) {
 }
 
 /**
+ *  -- Add --
  * Unstacks the first two values on the stack, adds them together and stacks the
- * result. If the number of values on the stack is strictly inferior to 2, the program
- * execution must stop with an error.
- */
+ * result. If the number of values on the stack is strictly inferior to 2, the
+ * program execution must stop with an error.
+ **/
 int		Instruction::add(const IOperand *value) {
 	(void)value;
 	if (verbose)
@@ -186,10 +191,11 @@ int		Instruction::add(const IOperand *value) {
 }
 
 /**
- *  Unstacks the first two values on the stack, subtracts them, then stacks the
- * result. If the number of values on the stack is strictly inferior to 2, the program
- * execution must stop with an error.
- */
+ *  -- Sub --
+ * Unstacks the first two values on the stack, subtracts them, then stacks the
+ * result. If the number of values on the stack is strictly inferior to 2, the
+ * program execution must stop with an error.
+ **/
 int		Instruction::sub(const IOperand *value) {
 	(void)value;
 	if (verbose)
@@ -209,10 +215,11 @@ int		Instruction::sub(const IOperand *value) {
 }
 
 /**
+ *  -- Mul --
  * Unstacks the first two values on the stack, multiplies them, then stacks the
- * result. If the number of values on the stack is strictly inferior to 2, the program
- * execution must stop with an error.
- */
+ * result. If the number of values on the stack is strictly inferior to 2, the
+ * program execution must stop with an error.
+ **/
 int		Instruction::mul(const IOperand *value) {
 	(void)value;
 	if (verbose)
@@ -233,13 +240,15 @@ int		Instruction::mul(const IOperand *value) {
 }
 
 /**
- * Unstacks the first two values on the stack, divides them, then stacks the result.
- * If the number of values on the stack is strictly inferior to 2, the program execution
- * must stop with an error. Moreover, if the divisor is equal to 0, the program execution
- * must stop with an error too. Chatting about floating point values is relevant a this
- * point. If you don’t understand why, some will understand. The linked question is
- * an open one, there’s no definitive answer.
- */
+ *  -- Div --
+ * Unstacks the first two values on the stack, divides them, then stacks the
+ * result. If the number of values on the stack is strictly inferior to 2, the
+ * program execution must stop with an error. Moreover, if the divisor is equal
+ * to 0, the program execution must stop with an error too. Chatting about
+ * floating point values is relevant a this point. If you don’t understand why,
+ * some will understand. The linked question is an open one, there’s no
+ * definitive answer.
+ **/
 int		Instruction::div(const IOperand *value) {
 	(void)value;
 	if (verbose)
@@ -260,12 +269,13 @@ int		Instruction::div(const IOperand *value) {
 }
 
 /**
+ *  -- Mod --
  * Unstacks the first two values on the stack, calculates the modulus, then
- * stacks the result. If the number of values on the stack is strictly inferior to 2, the
- * program execution must stop with an error. Moreover, if the divisor is equal to 0,
- * the program execution must stop with an error too. Same note as above about fp
- * values.
- */
+ * stacks the result. If the number of values on the stack is strictly inferior
+ * to 2, the program execution must stop with an error. Moreover, if the divisor
+ * is equal to 0, the program execution must stop with an error too. Same note
+ * as above about fp values.
+ **/
 int		Instruction::mod(const IOperand *value) {
 	(void)value;
 	if (verbose)
@@ -286,10 +296,11 @@ int		Instruction::mod(const IOperand *value) {
 }
 
 /**
+ *  -- Print --
  * Asserts that the value at the top of the stack is an 8-bit integer. (If not,
- * see the instruction assert), then interprets it as an ASCII value and displays the
- * corresponding character on the standard output.
- */
+ * see the instruction assert), then interprets it as an ASCII value and
+ * displays the corresponding character on the standard output.
+ **/
 int		Instruction::print(const IOperand *value) {
 	(void)value;
 	if (verbose)
@@ -299,23 +310,24 @@ int		Instruction::print(const IOperand *value) {
 	const IOperand *to_print = deque->front();
 	if (to_print->getType() != eOperandType::Int8)
 		throw Instruction::AssertException();
-	std::cout << static_cast<char>( std::stod( to_print->toString() ) ) << std::endl;
+	std::cout << static_cast<char>( std::stod( to_print->toString() ) )
+	<< std::endl;
 
 	return EXIT_SUCCESS;
 }
 
 /**
+ *  -- Exit --
  * Terminate the execution of the current program. If this instruction does not
- * appears while all others instruction has been processed, the execution must stop
- * with an error.
- */
+ * appears while all others instruction has been processed, the execution must
+ * stop with an error.
+ **/
 int		Instruction::exit(const IOperand *value) {
 	(void)value;
 	if (verbose)
 		std::cout << BLUE "<exit>" EOC << std::endl;
-	while (deque->size() > 0) {
+	while (deque->size() > 0)
 		pop();
-	}
 	instruction_exited = true;
 
 	return 42;
@@ -324,8 +336,11 @@ int		Instruction::exit(const IOperand *value) {
 // -- Bonus Instructions -------------------------------------------------------
 
 /**
- * Change top value to his absolute.
- */
+ *  -- Abs --
+ * Unstacks the first value on the stack, found it absolute value, then stack
+ * the result. If the number of values on the stack is empty, the program
+ * execution must stop with an error.
+ **/
 int		Instruction::abs( const IOperand *value ) {
 	(void)value;
 	if (verbose)
@@ -337,7 +352,8 @@ int		Instruction::abs( const IOperand *value ) {
 
 	const IOperand *val = deque->front();
 	if ( val->toString().at(0) == '-' ) {
-		const IOperand *absVal = factory.createOperand(val->getType(), val->toString().substr( 1 ));
+		const IOperand *absVal = factory.createOperand(val->getType()
+		, val->toString().substr( 1 ));
 		pop();
 		push (absVal);
 	}
@@ -345,6 +361,12 @@ int		Instruction::abs( const IOperand *value ) {
 	return EXIT_SUCCESS;
 }
 
+/**
+ *  -- Min --
+ * Unstacks the first two values on the stack, found the min of them, then stack
+ * the result. If the number of values on the stack is strictly inferior to 2,
+ * the program execution must stop with an error.
+ **/
 int		Instruction::min( const IOperand *value ) {
 	(void)value;
 	if (verbose)
@@ -367,6 +389,12 @@ int		Instruction::min( const IOperand *value ) {
 	return EXIT_SUCCESS;
 }
 
+/**
+ *  -- Max --
+ * Unstacks the first two values on the stack, found the max of them, then stack
+ * the result. If the number of values on the stack is strictly inferior to 2,
+ * the program execution must stop with an error.
+ **/
 int		Instruction::max( const IOperand *value ) {
 	(void)value;
 	if (verbose)
@@ -388,7 +416,12 @@ int		Instruction::max( const IOperand *value ) {
 	return EXIT_SUCCESS;
 }
 
-// TODO : pow function
+/**
+ *  -- Pow --
+ * Unstacks the first two values on the stack, pow them, then stacks the
+ * result. If the number of values on the stack is strictly inferior to 2, the
+ * program execution must stop with an error.
+ **/
 int		Instruction::pow( const IOperand *value ) {
 	(void)value;
 
@@ -406,7 +439,6 @@ int		Instruction::pow( const IOperand *value ) {
 	push(C);
 	delete A;
 	delete B;
-
 
 	return EXIT_SUCCESS;
 }
@@ -428,22 +460,23 @@ int		Instruction::debug(const IOperand *value) {
 	return EXIT_SUCCESS;
 }
 
-/*
- * Clear instructions list.
- */
+/**
+ *  -- Clear --
+ * Clear all the values from the stack.
+ **/
 int		Instruction::clear(const IOperand *value) {
 	(void)value;
 	if (verbose)
 		std::cout << BLUE "<clear>" EOC << std::endl;
 	while (deque->size() > 0)
 		pop();
-	instruction_exited = false;
 	return EXIT_SUCCESS;
 }
 
-/*
- * Clear instructions list.
- */
+/**
+ *  -- Sep --
+ * Print a separator on the output.
+ **/
 int		Instruction::sep(const IOperand *value) {
 	(void)value;
 	std::cout << "=====================================" << std::endl;
