@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:20:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 21:35:03 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/17 19:42:31 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,96 +51,28 @@ void	print_error(std::string error) {
 	std::cerr << RED << error << EOC << std::endl;
 }
 
-// TODO : readFromFile and readFromStdin to mix.
-// template <class T>
-// int		readFromInput( Instruction &instruction, T input, bool stdin ) {
-// 	std::vector <Parser *> parsers;
-// 	Factory factory = Factory();
-// 	std::string line;
-// 	int error = 0;
-// 	int result;
-
-// 	if (instruction.interactive)
-// 		std::cout << "> ";
-// 	for (int line_row = 1; std::getline(input, line); line_row++) {
-// 		if (line == ";;")
-// 			break ;
-// 		result = readLine( line, line_row, parsers, instruction, factory );
-// 		if ( result == EXIT_FAILURE ) {
-// 			error++;
-// 			if (!instruction.continue_error)
-// 				return EXIT_FAILURE;
-// 		} else if ( instruction.interactive && result == 42 )
-// 			break ;
-// 		if (instruction.interactive)
-// 			std::cout << "> ";
-// 	}
-// 	if (!instruction.interactive && !error) {
-// 		if (executeInstruction( parsers, instruction, factory ) == EXIT_FAILURE)
-// 			return (EXIT_FAILURE);
-// 	}
-// 	if (error) {
-// 		std::cout << MAGENTA "______________________\n" << error
-// 		<< " errors generated." EOC << std::endl;
-// 		return (EXIT_FAILURE);
-// 	}
-// 	return (EXIT_SUCCESS);
-// }
-
-int		readFromFile( char *file, Instruction &instruction ) {
-	// std::ifstream infile(file);
-	// int result = readFromInput (instruction, infile, false);
-	// int result = readFromInput (instruction, std::cin, false);
-
-	// return result;
-	std::vector <Parser *> parsers;
-	Factory factory = Factory();
-	// todo : check right of the file in input for correct message errors.
-	std::ifstream infile(file);
-	std::string line;
-	int error = 0;
-
-	for (int line_row = 1; std::getline(infile, line); line_row++) {
-		if (readLine(line, line_row, parsers, instruction, factory) == EXIT_FAILURE) {
-			error++;
-			if (!instruction.continue_error)
-				return (EXIT_FAILURE);
-		}
-	}
-
-	if (!instruction.interactive && !error) {
-		if (executeInstruction( parsers, instruction, factory ) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-	}
-	if (error) {
-		std::cout << MAGENTA "______________________\n" << error
-		<< " errors generated." EOC << std::endl;
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
-
-
-int		readFromStdin( Instruction &instruction ) {
+template<class _CharT, class _Traits>
+int		readFromInput( Instruction &instruction,
+std::basic_istream<_CharT, _Traits>& input, bool stdin ) {
 	std::vector <Parser *> parsers;
 	Factory factory = Factory();
 	std::string line;
 	int error = 0;
 	int result;
 
-	if (instruction.interactive)
+	if (stdin && instruction.interactive)
 		std::cout << "> ";
-	for (int line_row = 1; std::getline(std::cin, line); line_row++) {
-		if (line == ";;")
+	for (int line_row = 1; std::getline(input, line); line_row++) {
+		if (stdin && line == ";;")
 			break ;
 		result = readLine( line, line_row, parsers, instruction, factory );
 		if ( result == EXIT_FAILURE ) {
 			error++;
 			if (!instruction.continue_error)
 				return EXIT_FAILURE;
-		} else if ( instruction.interactive && result == 42 )
+		} else if ( stdin && instruction.interactive && result == 42 )
 			break ;
-		if (instruction.interactive)
+		if (stdin && instruction.interactive)
 			std::cout << "> ";
 	}
 	if (!instruction.interactive && !error) {
@@ -153,6 +85,15 @@ int		readFromStdin( Instruction &instruction ) {
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
+}
+
+int		readFromFile( char *file, Instruction &instruction  ) {
+	std::ifstream infile(file);
+	return readFromInput (instruction, infile, false);
+}
+
+int		readFromStdin( Instruction &instruction ) {
+	return readFromInput (instruction, std::cin, true);
 }
 
 int		readLine( std::string line, int line_row, std::vector <Parser *> &parsers,
