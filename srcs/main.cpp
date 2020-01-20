@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:20:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/17 19:42:31 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/20 18:34:07 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,10 @@ int		main( int ac, char**av ) {
 			return (usage(av[0]));
 	}
 
-	if (result == EXIT_SUCCESS) {
-		try {
-			instruction.test_exit();
-		} catch (std::exception &e) {
-			print_error(e.what());
-		}
+	if (instruction.continue_error && result > 0) {
+		std::cout << MAGENTA "______________________\n" << result
+		<< " errors generated." EOC << std::endl;
+		return (EXIT_FAILURE);
 	}
 
 	return (result);
@@ -57,7 +55,7 @@ std::basic_istream<_CharT, _Traits>& input, bool stdin ) {
 	std::vector <Parser *> parsers;
 	Factory factory = Factory();
 	std::string line;
-	int error = 0;
+	int errors = 0;
 	int result;
 
 	if (stdin && instruction.interactive)
@@ -67,24 +65,34 @@ std::basic_istream<_CharT, _Traits>& input, bool stdin ) {
 			break ;
 		result = readLine( line, line_row, parsers, instruction, factory );
 		if ( result == EXIT_FAILURE ) {
-			error++;
+			errors++;
 			if (!instruction.continue_error)
-				return EXIT_FAILURE;
-		} else if ( stdin && instruction.interactive && result == 42 )
+				return errors;
+		} else if ( stdin && instruction.interactive && result == EXIT_INSTR )
 			break ;
 		if (stdin && instruction.interactive)
 			std::cout << "> ";
 	}
-	if (!instruction.interactive && !error) {
-		if (executeInstruction( parsers, instruction, factory ) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
+
+	if (!instruction.interactive && errors)
+		return errors;
+
+	if (!instruction.interactive && (!errors || (instruction.continue_error && stdin))) {
+		errors += executeInstruction( parsers, instruction, factory );
 	}
-	if (error) {
-		std::cout << MAGENTA "______________________\n" << error
-		<< " errors generated." EOC << std::endl;
-		return (EXIT_FAILURE);
+
+	if (errors == 0 || instruction.continue_error) {
+		try {
+			instruction.test_exit();
+		} catch (std::exception &e) {
+			++errors;
+			print_error(e.what());
+		}
 	}
-	return (EXIT_SUCCESS);
+
+
+
+	return (errors);
 }
 
 int		readFromFile( char *file, Instruction &instruction  ) {
@@ -122,20 +130,22 @@ Instruction &instruction, Factory &factory) {
 
 int		executeInstruction( std::vector <Parser *> parsers, Instruction &instruction, Factory &factory ) {
 	bool execution = true;
-	int result;
+	int result = 0;
+	int errors = 0;
 
-	try {
-		for (auto &&parser : parsers) {
+	for (auto &&parser : parsers) {
+		try {
 			if (execution)
 				result = parser->execute( factory, instruction );
 			delete parser;
-			if (result == 42 || result == EXIT_FAILURE)
+			if (result == EXIT_INSTR || result == EXIT_FAILURE)
 				execution = false;
+		} catch (std::exception &e) {
+			errors++;
+			print_error( e.what() );
+			if (!instruction.continue_error)
+				return (errors);
 		}
-	} catch (std::exception &e) {
-		print_error( e.what() );
-		if (!instruction.continue_error)
-			return (EXIT_FAILURE);
 	}
-	return (EXIT_SUCCESS);
+	return (errors);
 }

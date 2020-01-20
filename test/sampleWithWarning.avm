@@ -1,6 +1,0 @@
-push int8(42); comment
-dump
-; test warning :
-exit
-; should not add instruction after the exit statement
-print

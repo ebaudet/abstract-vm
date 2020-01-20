@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 21:30:44 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/20 19:17:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,7 +330,7 @@ int		Instruction::exit(const IOperand *value) {
 		pop();
 	instruction_exited = true;
 
-	return 42;
+	return EXIT_INSTR;
 }
 
 // -- Bonus Instructions -------------------------------------------------------
@@ -372,19 +372,29 @@ int		Instruction::min( const IOperand *value ) {
 	if (verbose)
 		std::cout << BLUE "<min>" EOC << std::endl;
 
+	Factory factory;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "min: Stack is lower 2." );
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
 	deque->pop_front();
+	push (B);
+	push (A);
+	const IOperand *C;
 	if (*A < *B) {
-		push( A );
-		delete B;
+		C = factory.createOperand(A->getType(), A->toString());
+		// push( C );
+		// delete A;
+		// delete B;
 	} else {
-		push( B );
-		delete A;
+		C = factory.createOperand(B->getType(), B->toString());
+		// const IOperand *C = B;
+		// push( C );
+		// delete A;
+		// delete B;
 	}
+		push( C );
 
 	return EXIT_SUCCESS;
 }

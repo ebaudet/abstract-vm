@@ -6,8 +6,14 @@ abs
 dump
 
 ; test min/max
+debug
+sep
 min
+debug
+sep
 max
+debug
+sep
 
 ; test pow
 pow
@@ -23,36 +29,6 @@ print
 pop
 push int8(10)
 print
-pop
-
-; test not
-push int32(42)
-not
-dump
-pop
-
-; test and
-push int8(2) ; 0010
-push int8(3) ; 0011
-and
-dump
-; expect 2 (0010)
-pop
-
-; test or
-push int8(2) ; 0010
-push int8(3) ; 0011
-or
-dump
-; expect 3 (0011)
-pop
-
-; test xor
-push int8(2) ; 0010
-push int8(3) ; 0011
-xor
-dump
-; expect 1 (0001)
 pop
 
 ; print "-\n\n"

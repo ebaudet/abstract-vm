@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/09 20:29:34 by ebaudet           #+#    #+#              #
-#    Updated: 2020/01/16 12:31:32 by ebaudet          ###   ########.fr        #
+#    Updated: 2020/01/20 17:00:14 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ ifneq ($(UNAME_S), Darwin)
 endif
 SRC_PATH	= srcs
 INC_PATH	= includes
-LIB_PATH	= lib
 OBJ_PATH	= .obj
 SRC		=	main.cpp \
 			Lexer.cpp \
@@ -41,12 +40,10 @@ HEAD	=	main.hpp \
 			Token.hpp \
 			Color.hpp \
 			argparse.hpp
-LIB		=
 OBJ		= $(SRC:.cpp=.o)
 HEADP	= $(addprefix $(INC_PATH)/, $(HEAD))
 OBJP	= $(addprefix $(OBJ_PATH)/, $(OBJ))
-LIBP	= $(addprefix $(LIB_PATH)/, $(LIB))
-INCP	= $(foreach dir, $(INC_PATH) $(LIB_PATH), -I $(dir))
+INCP	= $(foreach dir, $(INC_PATH), -I $(dir))
 NORMAL	= "\x1B[0m"
 RED		= "\x1B[31m"
 GREEN	= "\x1B[32m"
@@ -68,7 +65,7 @@ $(NAME): $(OBJ_PATH) $(OBJP)
 	@printf $(CYAN)"-> create program : $(NAME)\n"$(NORMAL)
 	@$(CPP) $(FLAGS) -o $(NAME) $(OBJP) $(DEBUGFLG)
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp $(HEADP) $(LIBP)
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp $(HEADP)
 	@printf $(YELLOW)"-> $<\n"$(NORMAL)
 	@$(CPP) $(FLAGS) -c $< -o $@ $(INCP) $(DEBUGFLG)
 

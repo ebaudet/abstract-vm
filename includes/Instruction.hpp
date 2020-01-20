@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:46:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 20:18:48 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/20 18:06:21 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include "Factory.hpp"
 #include <deque>
 #include <map>
+#define EXIT_SUCCESS 0
+#define EXIT_INSTR -42
 
 class Instruction {
 
