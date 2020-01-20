@@ -1,10 +1,12 @@
-# abstract-vm
+# Abstract VM
 
-42 project C++
+_A C++ 42 project._
 
 ## About
 
 The purpose of the project is to create a simple virtual machine that can interpret programs written in a basic assembly language.
+
+More information in the [subject](subject/abstract-vm.en.pdf).
 
 ## Installation
 
@@ -14,6 +16,7 @@ Clone the project.
 $> git clone https://github.com/ebaudet/abstract-vm.git
 $> cd abstract-vm
 $> make
+$> ./avm [-civh] [FILE]
 ```
 
 ## Usage :
@@ -22,7 +25,7 @@ $> make
 $> ./avm --usage
 Usage: ./avm [-civh] [FILE]
 
-Abstract Vm : Virtual Machine that can interpret programs written in basic assembly language.
+Abstract VM : Virtual Machine that can interpret programs written in basic assembly language.
 
 optional arguments:
   -c, --continue	Continue after first error

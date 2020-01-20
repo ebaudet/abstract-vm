@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/15 19:45:30 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 12:44:30 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/20 19:43:17 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int		short_usage ( char *file ) {
 int		usage( char *file ) {
 	short_usage(file);
 	fprintf(stderr, "\n"
-					"Abstract Vm : Virtual Machine that can interpret programs "
+					"Abstract VM : Virtual Machine that can interpret programs "
 					"written in basic assembly language.\n"
 					"\n"
 					"optional arguments:\n"
