@@ -237,13 +237,14 @@ INSTR :=
     | exit
 < bonus instructions >
     | ls
-    | debug
-    | clear
-    | sep
     | abs
     | min
     | max
     | pow
+    | debug
+    | clear
+    | sep
+    | help
 
 VALUE :=
       int8(N)

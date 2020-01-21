@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/20 19:17:27 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/21 17:12:01 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,13 @@ std::map<std::string, Instruction::InstructionArg>	Instruction::instrArgs = {
 	// bonus
 	{"ls", {0, &Instruction::dump}},
 	{"abs", {0, &Instruction::abs}},
-	{"debug", {0, &Instruction::debug}},
-	{"clear", {0, &Instruction::clear}},
-	{"sep", {0, &Instruction::sep}},
 	{"min", {0, &Instruction::min}},
 	{"max", {0, &Instruction::max}},
 	{"pow", {0, &Instruction::pow}},
+	{"debug", {0, &Instruction::debug}},
+	{"clear", {0, &Instruction::clear}},
+	{"sep", {0, &Instruction::sep}},
+	{"help", {0, &Instruction::help}},
 };
 
 // -- Constructors -------------------------------------------------------------
@@ -363,8 +364,8 @@ int		Instruction::abs( const IOperand *value ) {
 
 /**
  *  -- Min --
- * Unstacks the first two values on the stack, found the min of them, then stack
- * the result. If the number of values on the stack is strictly inferior to 2,
+ * Add to the stack the min value of the 2 top value of the stack.
+ * If the number of values on the stack is strictly inferior to 2,
  * the program execution must stop with an error.
  **/
 int		Instruction::min( const IOperand *value ) {
@@ -378,31 +379,21 @@ int		Instruction::min( const IOperand *value ) {
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
-	deque->pop_front();
-	push (B);
 	push (A);
 	const IOperand *C;
-	if (*A < *B) {
+	if (*A < *B)
 		C = factory.createOperand(A->getType(), A->toString());
-		// push( C );
-		// delete A;
-		// delete B;
-	} else {
+	else
 		C = factory.createOperand(B->getType(), B->toString());
-		// const IOperand *C = B;
-		// push( C );
-		// delete A;
-		// delete B;
-	}
-		push( C );
+	push( C );
 
 	return EXIT_SUCCESS;
 }
 
 /**
  *  -- Max --
- * Unstacks the first two values on the stack, found the max of them, then stack
- * the result. If the number of values on the stack is strictly inferior to 2,
+ * Add to the stack the max value of the 2 top value of the stack.
+ * If the number of values on the stack is strictly inferior to 2,
  * the program execution must stop with an error.
  **/
 int		Instruction::max( const IOperand *value ) {
@@ -411,17 +402,17 @@ int		Instruction::max( const IOperand *value ) {
 		std::cout << BLUE "<max>" EOC << std::endl;
 	if (deque->size() < 2)
 		throw Instruction::StackException( "max: Stack is lower 2." );
+	Factory factory;
 	const IOperand *A = deque->front();
 	deque->pop_front();
 	const IOperand *B = deque->front();
-	deque->pop_front();
-	if (*A > *B) {
-		push( A );
-		delete B;
-	} else {
-		push( B );
-		delete A;
-	}
+	push (A);
+	const IOperand *C;
+	if (*A > *B)
+		C = factory.createOperand(A->getType(), A->toString());
+	else
+		C = factory.createOperand(B->getType(), B->toString());
+	push( C );
 
 	return EXIT_SUCCESS;
 }
@@ -490,6 +481,38 @@ int		Instruction::clear(const IOperand *value) {
 int		Instruction::sep(const IOperand *value) {
 	(void)value;
 	std::cout << "=====================================" << std::endl;
+	return EXIT_SUCCESS;
+}
+
+/**
+ *  -- Help --
+ * Print all instruction usable.
+ **/
+int		Instruction::help(const IOperand *value) {
+	(void)value;
+	std::cout << "========= list instructions =========\n"
+				 " push VALUE : push value on stack\n"
+				 " pop : unstacks the value from the top of the stack\n"
+				 " dump : print all the stack values\n"
+				 " assert VALUE : assert top stack value to VALUE\n"
+				 " add : unstack the 2 top stack's value and add them\n"
+				 " sub : unstack the 2 top stack's value and substract them\n"
+				 " mul : unstack the 2 top stack's value and multiply them\n"
+				 " div : unstack the 2 top stack's value and divide them\n"
+				 " mod : unstack the 2 top stack's value and mod them\n"
+				 " print : print the top value as a char if int8 type\n"
+				 " exit : exit the program\n"
+				 BLUE " Bonus :\n" EOC
+				 " ls : alias to dump\n"
+				 " abs : absolute of the top of the stack value\n"
+				 " min : add to the stack the min value of the 2 top value of the stack.\n"
+				 " max : add to the stack the max value of the 2 top value of the stack.\n"
+				 " pow : \n"
+				 " debug\n"
+				 " clear\n"
+				 " sep\n"
+				 " help\n"
+				 "=====================================" << std::endl;
 	return EXIT_SUCCESS;
 }
 

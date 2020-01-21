@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:46:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/20 18:06:21 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/21 16:55:14 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ public:
 	int		debug(const IOperand *value = NULL);
 	int		clear(const IOperand *value = NULL);
 	int		sep(const IOperand *value = NULL);
+	int		help(const IOperand *value = NULL);
 
 	// -- Publics méthods ------------------------------------------------------
 
