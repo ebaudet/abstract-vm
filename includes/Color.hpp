@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 16:45:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/14 16:45:45 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/21 13:10:18 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,12 @@
 #define F_WHITE  "\x1B[47m"
 #define CLEAR "\033[H\033[2J"
 #define BOLD "\e[1m"
+#define RBOLD "\e[21m"
 #define LIGHT "\e[2m"
+#define RLIGHT "\e[22m"
 #define ITALIC "\e[3m"
+#define RITALIC "\e[23m"
 #define ULINE "\e[4m"
+#define RULINE "\e[24m"
 
 #endif  // COLOR_HPP_

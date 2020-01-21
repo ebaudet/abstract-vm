@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:27:25 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 20:18:18 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/21 16:49:36 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ class Lexer {
 		void		lexLine( std::string line, int line_row );
 		std::string	parsingRegex();
 
-		// todo : check inherit
 		class LexerException : public std::runtime_error {
 		public:
 			LexerException();

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:44:15 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 12:27:13 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/21 16:49:22 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ class Parser {
 		size_t		GetPos() const;
 		size_t		GetLineRow() const;
 
-		// todo : check inherit
 		class ParserException : public std::runtime_error {
 		public:
 			ParserException();

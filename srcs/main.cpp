@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:20:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/20 18:34:07 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/21 13:52:40 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,17 @@ std::basic_istream<_CharT, _Traits>& input, bool stdin ) {
 		}
 	}
 
-
-
 	return (errors);
 }
 
 int		readFromFile( char *file, Instruction &instruction  ) {
 	std::ifstream infile(file);
+
+	if (infile.fail() || !infile.is_open()) {
+		print_error( "Error: Failed to open the file " ULINE + std::string(file)
+		+ RULINE );
+		return EXIT_FAILURE;
+	}
 	return readFromInput (instruction, infile, false);
 }
 
