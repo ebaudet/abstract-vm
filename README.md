@@ -34,6 +34,35 @@ optional arguments:
   -h, --help, --usage	Show this help message
 ```
 
+```bash
+$> ./avm --interactive
+> help
+========= list instructions =========
+ push VALUE   : push value on stack
+ pop          : unstacks the value from the top of the stack
+ dump         : print all the stack values
+ assert VALUE : assert top stack value to VALUE
+ add          : unstack the 2 top stack's value and add them
+ sub          : unstack the 2 top stack's value and substract them
+ mul          : unstack the 2 top stack's value and multiply them
+ div          : unstack the 2 top stack's value and divide them
+ mod          : unstack the 2 top stack's value and mod them
+ print        : print the top value as a char if int8 type
+ exit         : exit the program
+Bonus :
+ ls           : alias to dump
+ abs          : absolute of the top of the stack value
+ min          : add to the stack the min value of the 2 top value of the stack
+ max          : add to the stack the max value of the 2 top value of the stack
+ pow          : unstack the 2 top stack's value and pow them
+ debug        : like dump, but also print the type and the precision
+ clear        : clear the all stack
+ sep          : print a separator
+ help         : print this help message
+=====================================
+> exit
+```
+
 ## Exemple :
 
 ```bash
