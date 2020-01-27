@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/21 17:12:01 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/01/27 18:18:54 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,11 +136,14 @@ int		Instruction::dump(const IOperand *value) {
 	(void)value;
 	std::deque<const IOperand *>::iterator it;
 	if (verbose)
-		std::cout << BLUE "<dump>" EOC << std::endl;
+		std::cout << BLUE "╒═ dump: ═╕" EOC << std::endl;
 	for (it = deque->begin(); it != deque->end(); ++it) {
+		if (verbose)
+			std::cout << BLUE "│  " EOC;
 		std::cout << (*it)->toString() << std::endl;
 	}
-
+	if (verbose)
+		std::cout << BLUE "╘═════════╛" EOC << std::endl;
 	return EXIT_SUCCESS;
 }
 
@@ -184,7 +187,7 @@ int		Instruction::add(const IOperand *value) {
 	deque->pop_front();
 	const IOperand *C;
 	C = *A + *B;
-	push(C);
+	deque->push_front(C);
 	delete A;
 	delete B;
 
@@ -207,8 +210,8 @@ int		Instruction::sub(const IOperand *value) {
 	deque->pop_front();
 	const IOperand *B = deque->front();
 	deque->pop_front();
-	const IOperand *C = *A - *B;
-	push(C);
+	const IOperand *C = *B - *A;
+	deque->push_front(C);
 	delete A;
 	delete B;
 
@@ -233,7 +236,7 @@ int		Instruction::mul(const IOperand *value) {
 	deque->pop_front();
 	const IOperand *C;
 	C = *A * *B;
-	push(C);
+	deque->push_front(C);
 	delete A;
 	delete B;
 
@@ -261,8 +264,8 @@ int		Instruction::div(const IOperand *value) {
 	const IOperand *B = deque->front();
 	deque->pop_front();
 	const IOperand *C;
-	C = *A / *B;
-	push(C);
+	C = *B / *A;
+	deque->push_front(C);
 	delete A;
 	delete B;
 
@@ -288,8 +291,8 @@ int		Instruction::mod(const IOperand *value) {
 	const IOperand *B = deque->front();
 	deque->pop_front();
 	const IOperand *C;
-	C = *A % *B;
-	push(C);
+	C = *B % *A;
+	deque->push_front(C);
 	delete A;
 	delete B;
 
@@ -305,14 +308,15 @@ int		Instruction::mod(const IOperand *value) {
 int		Instruction::print(const IOperand *value) {
 	(void)value;
 	if (verbose)
-		std::cout << BLUE "<print>" EOC << std::endl;
+		std::cout << BLUE "print: '" EOC;
 	if (deque->size() == 0)
 		throw Instruction::StackException( "print: Empty stack." );
 	const IOperand *to_print = deque->front();
 	if (to_print->getType() != eOperandType::Int8)
 		throw Instruction::AssertException();
-	std::cout << static_cast<char>( std::stod( to_print->toString() ) )
-	<< std::endl;
+	std::cout << static_cast<char>( std::stod( to_print->toString() ) );
+	if (verbose)
+		std::cout << BLUE "'" EOC << std::endl;
 
 	return EXIT_SUCCESS;
 }
@@ -356,7 +360,7 @@ int		Instruction::abs( const IOperand *value ) {
 		const IOperand *absVal = factory.createOperand(val->getType()
 		, val->toString().substr( 1 ));
 		pop();
-		push (absVal);
+		deque->push_front(absVal);
 	}
 
 	return EXIT_SUCCESS;
@@ -385,7 +389,7 @@ int		Instruction::min( const IOperand *value ) {
 		C = factory.createOperand(A->getType(), A->toString());
 	else
 		C = factory.createOperand(B->getType(), B->toString());
-	push( C );
+	deque->push_front(C);
 
 	return EXIT_SUCCESS;
 }
@@ -412,7 +416,7 @@ int		Instruction::max( const IOperand *value ) {
 		C = factory.createOperand(A->getType(), A->toString());
 	else
 		C = factory.createOperand(B->getType(), B->toString());
-	push( C );
+	deque->push_front(C);
 
 	return EXIT_SUCCESS;
 }
@@ -437,7 +441,7 @@ int		Instruction::pow( const IOperand *value ) {
 	deque->pop_front();
 	const IOperand *C;
 	C = A->pow(*B);
-	push(C);
+	deque->push_front(C);
 	delete A;
 	delete B;
 
@@ -451,12 +455,26 @@ int		Instruction::debug(const IOperand *value) {
 	(void)value;
 	std::deque<const IOperand *>::iterator it;
 
+	size_t len = 0;
+
+	if (verbose) {
+		for (it = deque->begin(); it != deque->end(); ++it) {
+			len = std::max(dval(*it).length(), len);
+		}
+		std::cout << "len max:" << len << std::endl;
+	}
+
 	if (verbose)
-		std::cout << BLUE "<debug>" EOC << std::endl;
+		std::cout << BLUE "╒═ debug: ═════════╕" EOC << std::endl;
 
 	for (it = deque->begin(); it != deque->end(); ++it) {
+		if (verbose)
+			std::cout << BLUE "│  " EOC;
 		std::cout << dval(*it) << std::endl;
 	}
+	if (verbose)
+		std::cout << BLUE "╘══"  "══╛" EOC << std::endl;
+		// std::cout << BLUE "╘══" << std::string(len, '═') << "══╛" EOC << std::endl;
 
 	return EXIT_SUCCESS;
 }
@@ -471,6 +489,7 @@ int		Instruction::clear(const IOperand *value) {
 		std::cout << BLUE "<clear>" EOC << std::endl;
 	while (deque->size() > 0)
 		pop();
+
 	return EXIT_SUCCESS;
 }
 
@@ -481,6 +500,7 @@ int		Instruction::clear(const IOperand *value) {
 int		Instruction::sep(const IOperand *value) {
 	(void)value;
 	std::cout << "=====================================" << std::endl;
+
 	return EXIT_SUCCESS;
 }
 
@@ -513,6 +533,7 @@ int		Instruction::help(const IOperand *value) {
 				 " sep          : print a separator\n"
 				 " help         : print this help message\n"
 				 "=====================================" << std::endl;
+
 	return EXIT_SUCCESS;
 }
 
@@ -535,5 +556,6 @@ std::string Instruction::dval(const IOperand *value) {
 
 	result = "{" + value->toString() + ", " + type + ", "
 	+ std::to_string(value->getPrecision())  + "}";
+
 	return result;
 }
