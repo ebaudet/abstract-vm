@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/09 20:29:34 by ebaudet           #+#    #+#              #
-#    Updated: 2020/01/20 17:00:14 by ebaudet          ###   ########.fr        #
+#    Updated: 2020/03/13 19:58:34 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRC_PATH	= srcs
 INC_PATH	= includes
 OBJ_PATH	= .obj
 SRC		=	main.cpp \
+			abstract-vm.cpp \
 			Lexer.cpp \
 			Parser.cpp \
 			Factory.cpp \
@@ -29,7 +30,7 @@ SRC		=	main.cpp \
 			Instruction.cpp \
 			Token.cpp \
 			argparse.cpp
-HEAD	=	main.hpp \
+HEAD	=	abstract-vm.hpp \
 			Lexer.hpp \
 			Parser.hpp \
 			IOperand.hpp \

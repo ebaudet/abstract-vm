@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 19:57:26 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 20:41:46 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/03/13 18:39:46 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,16 @@ public:
 		Constructors // Destructors
 	************************************************/
 
-	Operand<T>( Factory const &fact, eOperandType type, std::string value )
-	: _factory( fact ), _type( type ), _value( value ) {
+	Operand<T>(Factory const &fact, eOperandType type, std::string value)
+	: _factory(fact), _type(type), _value(value) {
 	}
 
-	Operand<T>( Operand const &instance ) {
+	Operand<T>(Operand const &instance) {
 		*this = instance;
 	}
 
-	Operand<T> &operator=( Operand const &rhs ) {
-		if ( this != &rhs ) {
+	Operand<T> &operator=(Operand const &rhs) {
+		if (this != &rhs) {
 			_factory = rhs.getFactory();
 			_type = rhs.getType();
 			_value = rhs.toString();
@@ -57,56 +57,56 @@ public:
 	************************************************/
 
 	// Product
-	IOperand const *	operator*( IOperand const & rhs ) const {
-		return _operation( rhs, eOperationType::Multiplication );
+	IOperand const *	operator*(IOperand const & rhs) const {
+		return _operation(rhs, eOperationType::Multiplication);
 	}
 
 	// Quotient
-	IOperand const *	operator/( IOperand const & rhs ) const {
-		return _operation( rhs, eOperationType::Division );
+	IOperand const *	operator/(IOperand const & rhs) const {
+		return _operation(rhs, eOperationType::Division);
 	}
 
 	// Sum
-	IOperand const *	operator+( IOperand const & rhs ) const {
-		return _operation( rhs, eOperationType::Addition );
+	IOperand const *	operator+(IOperand const & rhs) const {
+		return _operation(rhs, eOperationType::Addition);
 	}
 	//open Difference
-	IOperand const *	operator-( IOperand const & rhs ) const {
-		return _operation( rhs, eOperationType::Substration );
+	IOperand const *	operator-(IOperand const & rhs) const {
+		return _operation(rhs, eOperationType::Substration);
 	}
 	// Modulo
-	IOperand const *	operator%( IOperand const & rhs ) const {
-		return _operation( rhs, eOperationType::Modulo );
+	IOperand const *	operator%(IOperand const & rhs) const {
+		return _operation(rhs, eOperationType::Modulo);
 	}
 
 	// -- Bonus ---------------------------------------
 
-	bool	operator==( IOperand const & rhs ) const {
-		double lval = std::stod( _value );
-		double rval = std::stod( rhs.toString() );
-		return ( lval == rval );
+	bool	operator==(IOperand const & rhs) const {
+		double lval = std::stod(_value);
+		double rval = std::stod(rhs.toString());
+		return (lval == rval);
 	}
 
-	bool	operator!=( IOperand const & rhs ) const {
-		double lval = std::stod( _value );
-		double rval = std::stod( rhs.toString() );
-		return ( lval != rval );
+	bool	operator!=(IOperand const & rhs) const {
+		double lval = std::stod(_value);
+		double rval = std::stod(rhs.toString());
+		return (lval != rval);
 	}
 
-	bool	operator<( IOperand const & rhs ) const {
-		double lval = std::stod( _value );
-		double rval = std::stod( rhs.toString() );
-		return ( lval < rval );
+	bool	operator<(IOperand const & rhs) const {
+		double lval = std::stod(_value);
+		double rval = std::stod(rhs.toString());
+		return (lval < rval);
 	}
 
-	bool	operator>( IOperand const & rhs ) const {
-		double lval = std::stod( _value );
-		double rval = std::stod( rhs.toString() );
-		return ( lval > rval );
+	bool	operator>(IOperand const & rhs) const {
+		double lval = std::stod(_value);
+		double rval = std::stod(rhs.toString());
+		return (lval > rval);
 	}
 
-	IOperand const *	pow( IOperand const & rhs ) const {
-		return _operation( rhs, eOperationType::Pow );
+	IOperand const *	pow(IOperand const & rhs) const {
+		return _operation(rhs, eOperationType::Pow);
 	}
 
 	/***********************************************
@@ -114,12 +114,12 @@ public:
 	************************************************/
 
 	// Precision of the type of the instance
-	int				getPrecision( void ) const {
-		return static_cast<int>( _type );
+	int				getPrecision(void) const {
+		return static_cast<int>(_type);
 	}
 
 	// Type of the instance
-	eOperandType	getType( void ) const {
+	eOperandType	getType(void) const {
 		return _type;
 	}
 
@@ -128,21 +128,21 @@ public:
 	}
 
 	// String representation of the instance
-	std::string const & toString( void ) const {
+	std::string const & toString(void) const {
 		return _value;
 	}
 
 	class DivideByZeroException : public std::runtime_error {
 		public:
-			DivideByZeroException() : std::runtime_error( "Divide by zero exception." ) {}
+			DivideByZeroException() : std::runtime_error("Divide by zero exception.") {}
 	};
 	class OverflowException : public std::overflow_error {
 		public:
-			OverflowException() : std::overflow_error( "Overflow on a value" ) {}
+			OverflowException() : std::overflow_error("Overflow on a value") {}
 	};
 	class UnderflowException : public std::underflow_error {
 		public:
-			UnderflowException() : std::underflow_error( "Underflow on a value" ) {}
+			UnderflowException() : std::underflow_error("Underflow on a value") {}
 	};
 
 private:
@@ -161,11 +161,11 @@ private:
 
 	Operand<T>() {} // constructeur sans argument non accessible.
 
-	IOperand const *	_operation( IOperand const & rhs, eOperationType operation ) const {
-		double rval = std::stod( rhs.toString() );
-		double lval = std::stod( _value );
+	IOperand const *	_operation(IOperand const & rhs, eOperationType operation) const {
+		double rval = std::stod(rhs.toString());
+		double lval = std::stod(_value);
 		double result = 0;
-		switch ( operation ) {
+		switch (operation) {
 			case eOperationType::Multiplication:
 				result = lval * rval;
 				break;
@@ -183,10 +183,10 @@ private:
 			case eOperationType::Modulo:
 				if (rval == 0)
 					throw Operand::DivideByZeroException();
-				result = std::fmod( lval, rval );
+				result = std::fmod(lval, rval);
 				break;
 			case eOperationType::Pow:
-				result = std::pow( lval, rval );
+				result = std::pow(lval, rval);
 				break;
 			default:
 				throw Exception::Operand();
@@ -197,11 +197,11 @@ private:
 		if (result < std::numeric_limits<double>::lowest())
 			throw Operand::UnderflowException();
 
-		int precision = std::max( rhs.getPrecision(), this->getPrecision() );
-		eOperandType type = static_cast<eOperandType>( precision );
+		int precision = std::max(rhs.getPrecision(), this->getPrecision());
+		eOperandType type = static_cast<eOperandType>(precision);
 		std::ostringstream strs;
 		strs << std::fixed << result;
-		return _factory.createOperand( type, strs.str() );
+		return _factory.createOperand(type, strs.str());
 	}
 };
 

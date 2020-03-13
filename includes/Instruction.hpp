@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:46:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/21 16:55:14 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/03/13 18:39:46 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ public:
 	// -- Constructors ---------------------------------------------------------
 
 	Instruction();
-	Instruction( Instruction const &src );
+	Instruction(Instruction const &src);
 	~Instruction();
 
 	// -- Operators ------------------------------------------------------------
 
-	Instruction &operator=( Instruction const &rhs );
+	Instruction &operator=(Instruction const &rhs);
 
 	// -- Instructions ---------------------------------------------------------
 

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/15 19:45:52 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/15 22:21:46 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/03/13 18:39:46 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 #include "Instruction.hpp"
 
-int		short_usage ( char *file );
-int		usage( char *file );
-int		argparse( int ac, char **av, Instruction &instruction );
+int		short_usage (char *file);
+int		usage(char *file);
+int		argparse(int ac, char **av, Instruction &instruction);
 
 #endif  // ARGPARSE_HPP_

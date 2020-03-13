@@ -36,6 +36,6 @@ qe
 
 wretetw
 
-push float(  5)
+push float( 5)
 
 assert int(55)

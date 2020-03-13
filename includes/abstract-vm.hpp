@@ -1,31 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.hpp                                           :+:      :+:    :+:   */
+/*   abstract-vm.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/15 22:12:22 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 21:09:29 by ebaudet          ###   ########.fr       */
+/*   Created: 2020/03/13 19:40:57 by ebaudet           #+#    #+#             */
+/*   Updated: 2020/03/13 20:39:50 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_HPP_
-#define MAIN_HPP_
+#if !defined(ABSTRACT_VM)
+#define ABSTRACT_VM
 
 #include <iostream>
-#include <vector>
 #include "Instruction.hpp"
 #include "Parser.hpp"
 #include "Factory.hpp"
 
 void	print_error(std::string error);
-int		executeInstruction( std::vector <Parser *> parsers,
-		Instruction &instruction, Factory &factory );
-int		readLine( std::string line, int line_row,
+int		readFromFile(char *file, Instruction &instruction);
+int		readFromStdin(Instruction &instruction);
+template<class _CharT, class _Traits>
+int		readInput(Instruction &instruction,
+std::basic_istream<_CharT, _Traits>& input, bool stdin);
+int		readLine(std::string line, int line_row,
 		std::vector <Parser *> &parsers, Instruction &instruction,
 		Factory &factory);
-int		readFromFile( char *file, Instruction &instruction );
-int		readFromStdin( Instruction &instruction );
+int		executeInstructions(std::vector <Parser *> parsers,
+		Instruction &instruction, Factory &factory);
+bool	execute(Factory &factory, Instruction &instruction, Parser &p);
 
-#endif  // MAIN_HPP_
+#endif // ABSTRACT_VM

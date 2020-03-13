@@ -6,16 +6,16 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:36:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/16 18:06:53 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/03/13 20:47:06 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Lexer.hpp"
-#include "Parser.hpp"
 #include <iostream>
 #include <regex>
 #include <sstream>
 
+#include "Lexer.hpp"
+#include "Parser.hpp"
 #include "Color.hpp"
 
 void	p_error(std::string error) {
@@ -55,20 +55,23 @@ Lexer &Lexer::operator=(Lexer const &rhs) {
 
 // -- Exceptions errors --------------------------------------------------------
 
-Lexer::LexerException::LexerException( const char* what_arg )
-: std::runtime_error( std::string(
+Lexer::LexerException::LexerException(const char* what_arg)
+: std::runtime_error(std::string(
 	 what_arg
-	).c_str() ) {}
+	).c_str()) {}
 
 Lexer::LexerException::LexerException()
-: std::runtime_error( RED "Lexer Exception" EOC ) {}
+: std::runtime_error(RED "Lexer Exception" EOC) {}
 
 // -- Methods ------------------------------------------------------------------
 
 /**
- * Create the parsing Regex in the same order that eTokenType (in Token.hpp).
+ * @brief Create the parsing Regex in the same order that eTokenType (in
+ * Token.hpp).
+ *
+ * @return std::string
  */
-std::string Lexer::parsingRegex() {
+std::string Lexer::createRegex() {
 	std::string comment = "(;.*)";
 	std::string open_par = "(\\()";
 	std::string close_par = "(\\))";
@@ -97,33 +100,39 @@ std::string Lexer::parsingRegex() {
 		+ "|" + space;
 }
 
+/**
+ * @brief Lexer for line. Throw a LexerException error if not passed.
+ *
+ * @param line
+ * @param line_row
+ */
 void Lexer::lexLine(std::string line, int line_row) {
-	std::string regexStr = parsingRegex();
-	std::regex r(regexStr);
-	std::smatch m;
+	std::string regexStr = createRegex();
+	std::regex regex(regexStr);
+	std::smatch match;
 	std::string::const_iterator it = line.cbegin();
 	size_t pos = 0;
 	int found;
 
-	listToken.erase( listToken.begin(), listToken.end() );
+	listToken.erase(listToken.begin(), listToken.end());
 
 	while ((it != line.cend())
-		&& std::regex_search(it, line.cend(), m, r) == true) {
+		&& std::regex_search(it, line.cend(), match, regex) == true) {
 		found = 0;
-		for (unsigned long group_nb = 1; group_nb < m.size(); group_nb++) {
-			if (!m[group_nb].str().empty()) {
-				Token newToken = Token( static_cast<eTokenType>(group_nb),
-					m.str(0), pos, line_row );
-				listToken.push_back( newToken );
-				it += m.length();
-				pos += m.length();
+		for (unsigned long group_nb = 1; group_nb < match.size(); group_nb++) {
+			if (!match[group_nb].str().empty()) {
+				Token newToken = Token(static_cast<eTokenType>(group_nb),
+					match.str(0), pos, line_row);
+				listToken.push_back(newToken);
+				it += match.length();
+				pos += match.length();
 				found++;
 			}
 		}
 		if (!found) {
 			std::ostringstream sstr;
 			sstr << RED "LexerError:" << line_row << ":" << pos << ":" EOC
-			" error: unkown expression \"" << &line[it - line.cbegin()]
+			" error: unknown expression \"" << &line[it - line.cbegin()]
 			<< "\"\n" << line << "\n" << std::string(pos, ' ') << GREEN "^" EOC;
 			throw Lexer::LexerException(sstr.str().c_str());
 		}

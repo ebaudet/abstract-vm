@@ -43,7 +43,7 @@ $> ./avm --interactive
  dump         : print all the stack values
  assert VALUE : assert top stack value to VALUE
  add          : unstack the 2 top stack's value and add them
- sub          : unstack the 2 top stack's value and substract them
+ sub          : unstack the 2 top stack's value and subtract them
  mul          : unstack the 2 top stack's value and multiply them
  div          : unstack the 2 top stack's value and divide them
  mod          : unstack the 2 top stack's value and mod them
@@ -63,7 +63,7 @@ Bonus :
 > exit
 ```
 
-## Exemple :
+## Example :
 
 ```bash
 $> ./avm
@@ -133,7 +133,7 @@ Errors example :
 ```bash
 $> ./avm --interactive --continue
 > unknown instruction
-LexerError:1:0: error: unkown expression "unknown instruction"
+LexerError:1:0: error: unknown expression "unknown instruction"
 unknown instruction
 ^
 > push int8(128)
@@ -188,16 +188,16 @@ $ cat -n test/sampleWithLexerError.avm
     16	popp
     17	push int(33)
 $> ./avm -c test/sampleWithLexerError.avm
-LexerError:14:5: error: unkown expression "int128(42)"
+LexerError:14:5: error: unknown expression "int128(42)"
 push int128(42)
      ^
-LexerError:15:0: error: unkown expression "ad d"
+LexerError:15:0: error: unknown expression "ad d"
 ad d
 ^
-LexerError:16:3: error: unkown expression "p"
+LexerError:16:3: error: unknown expression "p"
 popp
    ^
-LexerError:17:5: error: unkown expression "int(33)"
+LexerError:17:5: error: unknown expression "int(33)"
 push int(33)
      ^
 ______________________

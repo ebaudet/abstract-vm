@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/10 10:24:54 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/14 15:51:20 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/03/13 18:39:46 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ class Token
 
 		// Constructors
 		Token();
-		Token( eTokenType type, std::string value, size_t pos, size_t line );
-		Token( Token const &src );
+		Token(eTokenType type, std::string value, size_t pos, size_t line);
+		Token(Token const &src);
 		~Token();
 
 		// Operators
-		Token &operator=( Token const &rhs );
+		Token &operator=(Token const &rhs);
 		friend std::ostream& operator<<(std::ostream& os, const Token& tolken);
 
 		// Methods
@@ -51,10 +51,10 @@ class Token
 		size_t GetPos() const;
 		size_t GetLine() const;
 		size_t GetLength() const;
-		void SetType( eTokenType type );
-		void SetValue( std::string value );
-		void SetPos( size_t pos );
-		void SetLine( size_t line );
+		void SetType(eTokenType type);
+		void SetValue(std::string value);
+		void SetPos(size_t pos);
+		void SetLine(size_t line);
 };
 
 #endif  // TOKEN_HPP_

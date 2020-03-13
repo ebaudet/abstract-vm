@@ -6,21 +6,34 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/15 19:45:30 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/01/20 19:43:17 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/03/13 20:47:59 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "argparse.hpp"
 #include <cstdio>
 #include <getopt.h>
 #include <stdlib.h>
 
-int		short_usage ( char *file ) {
+#include "argparse.hpp"
+
+/**
+ * @brief Print short usage where error usage of program.
+ *
+ * @param file
+ * @return int
+ */
+int		short_usage (char *file) {
 	fprintf(stderr, "Usage: %s [-civh] [FILE]\n", file);
 	return (EXIT_FAILURE);
 }
 
-int		usage( char *file ) {
+/**
+ * @brief Print usage for program.
+ *
+ * @param file
+ * @return int
+ */
+int		usage(char *file) {
 	short_usage(file);
 	fprintf(stderr, "\n"
 					"Abstract VM : Virtual Machine that can interpret programs "
@@ -36,7 +49,20 @@ int		usage( char *file ) {
 	return (EXIT_FAILURE);
 }
 
-int		argparse( int ac, char **av, Instruction &instruction ) {
+/**
+ * @brief Parsing of the arguments of the program.
+ * * interactive : Continue after first error
+ * * continue : Interactive mode for entry. Directly execute the command without
+ *              expecting
+ * * verbose : Verbose mode
+ * * help / usage : Show this help message
+ *
+ * @param ac
+ * @param av
+ * @param instruction
+ * @return int
+ */
+int		argparse(int ac, char **av, Instruction &instruction) {
 	struct option long_options[] = {
 		{"interactive",	no_argument, 0, 'i'},
 		{"continue",	no_argument, 0, 'c'},
@@ -47,8 +73,8 @@ int		argparse( int ac, char **av, Instruction &instruction ) {
 	};
 	int opt;
 	int option_index = 0;
-	while ( (opt = getopt_long( ac, av, "icvh", long_options, &option_index ))
-	!= EOF ) {
+	while ((opt = getopt_long(ac, av, "icvh", long_options, &option_index))
+	!= EOF) {
 		switch (opt) {
 			case 'i':
 				instruction.interactive = true;
@@ -60,9 +86,9 @@ int		argparse( int ac, char **av, Instruction &instruction ) {
 				instruction.continue_error = true;
 				break;
 			case '?':
-				return short_usage( av[0] );
+				return short_usage(av[0]);
 			case 'h': default:
-				return (usage( av[0] ));
+				return (usage(av[0]));
 		}
 	}
 	return (EXIT_SUCCESS);
