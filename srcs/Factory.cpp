@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include <limits>
 #include "Factory.hpp"
 #include "Operand.hpp"
 #include "Exception.hpp"
