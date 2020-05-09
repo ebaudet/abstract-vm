@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:36:12 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/03/13 20:47:06 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/05/09 16:49:46 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ Lexer::~Lexer() {
 // -- Operators ----------------------------------------------------------------
 
 Lexer &Lexer::operator=(Lexer const &rhs) {
-	if (this != &rhs)
-		;
+	if (this != &rhs) {
+	}
 	return *this;
 }
 
