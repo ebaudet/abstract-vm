@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 20:25:01 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/03/13 20:45:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/05/09 16:51:58 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ Factory::~Factory() {
 // -- Operators ----------------------------------------------------------------
 
 Factory &Factory::operator=(Factory const &rhs) {
-	if (this != &rhs)
-		;
+	if (this != &rhs) {
+	}
 	return *this;
 }
 
