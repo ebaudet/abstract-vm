@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/07 16:50:19 by ebaudet           #+#    #+#             */
-/*   Updated: 2020/03/13 20:45:55 by ebaudet          ###   ########.fr       */
+/*   Updated: 2020/05/09 22:51:05 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -494,7 +494,7 @@ int		Instruction::pow(const IOperand *value) {
 	const IOperand *B = deque->front();
 	deque->pop_front();
 	const IOperand *C;
-	C = A->pow(*B);
+	C = B->pow(*A);
 	deque->push_front(C);
 	delete A;
 	delete B;
