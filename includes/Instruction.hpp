@@ -15,6 +15,7 @@
 
 #include "IOperand.hpp"
 #include "Factory.hpp"
+#include <stdexcept>
 #include <deque>
 #include <map>
 #define EXIT_SUCCESS 0
